@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kec.Banggae Timur Kab. Majene</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        header {
+            background-color: #5c500e;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-content {
+            flex: 1;
+        }
+        
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        
+        header p {
+            color: #cccccc;
+        }
+        
+        .logo-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0.9);
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 400px;
+            background-color: #2d2d2d;
+            padding: 1rem;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .search-container {
+            margin-bottom: 1rem;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #3c3c3c;
+            color: #e0e0e0;
+        }
+        
+        .search-container input::placeholder {
+            color: #999;
+        }
+        
+        .filters {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #3c3c3c;
+            border-radius: 4px;
+        }
+        
+        .filters select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        .filter-info {
+            display: none; /* Sembunyikan informasi jumlah */
+        }
+        
+        .data-list {
+            margin-top: 1rem;
+        }
+        
+        .data-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background-color: #3c3c3c;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-left: 3px solid #444;
+        }
+        
+        .data-item:hover {
+            background-color: #4a4a4a;
+        }
+        
+        .data-item.active {
+            background-color: #34495e;
+            border-left: 4px solid #3498db;
+        }
+        
+        .data-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        
+        .data-item p {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            margin-bottom: 0.25rem;
+        }
+        
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+        
+        /* Style untuk popup peta */
+        .leaflet-popup-content-wrapper {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .leaflet-popup-tip {
+            background-color: #2d2d2d;
+        }
+        
+        .info-window {
+            font-size: 0.9rem;
+        }
+        
+        .info-window h3 {
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        
+        .info-window p {
+            margin-bottom: 0.25rem;
+            color: #cccccc;
+        }
+        
+        .legend {
+            padding: 10px;
+            background: #2d2d2d;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+        
+        .legend h4 {
+            margin: 0 0 10px;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+        
+        .legend span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+        
+        /* Style untuk layer control */
+        .leaflet-control-layers {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        .leaflet-control-layers-toggle {
+            background-color: #3c3c3c;
+        }
+        
+        .leaflet-control-zoom a {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-bottom: 1px solid #444;
+        }
+        
+        .leaflet-control-zoom a:hover {
+            background-color: #3c3c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 40%;
+            }
+            
+            #map {
+                height: 60%;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                margin-top: 15px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kec.Banggae Timur Kab. Majene</h1>
+            <p>Data dan peta lokasi bangunan gedung yang telah mendapatkan persetujuan</p>
+        </div>
+        <div class="logo-container">
+            <img src="gambar/gambar/gambar_1.png" alt="Logo Majene" class="logo">
+            <img src="gambar/gambar/gambar_2.png" alt="Logo PUPR" class="logo">
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Cari berdasarkan nama atau alamat...">
+            </div>
+            
+            <div class="filters">
+                <select id="status-filter">
+                    <option value="">Semua Status</option>
+                    <option value="Disetujui">Disetujui</option>
+                    <option value="Proses">Dalam Proses</option>
+                    <option value="Ditolak">Ditolak</option>
+                </select>
+                
+                <select id="type-filter">
+                    <option value="">Semua Jenis Kegiatan</option>
+                    <option value="Rumah Tinggal">Rumah Tinggal</option>
+                    <option value="Perumahan dan Perdagangan Jasa">Perumahan dan Perdagangan Jasa</option>
+                    <option value="Rumah Kos">Rumah Kos</option>
+                    <option value="Hunian/Perdagangan & Jasa">Hunian/Perdagangan & Jasa</option>
+                    <option value="Ruko">Ruko</option>
+                </select>
+                
+                <select id="year-filter">
+                    <option value="">Semua Tahun</option>
+                    <!-- Tahun akan diisi oleh JavaScript -->
+                </select>
+                
+                <div class="filter-info" id="type-info">
+                    <!-- Informasi jumlah disembunyikan -->
+                </div>
+            </div>
+            
+            <div class="data-list" id="data-list">
+                <!-- Data akan diisi oleh JavaScript -->
+            </div>
+        </div>
+        
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Data persetujuan bangunan gedung
+        const buildingData = [
+            {
+                id: 1,
+                name: "H. Muslimin Amin, S.Sos",
+                address: "'Lingk. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.541035,
+                lng: 118.98598,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-04-15",
+                area: "48 m²",
+                floors: 1,
+                permitNumber: "-"
+            },
+            {
+                id: 2,
+                name: "ASMAR, S.Pd.I",
+                address: "Lingk. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.545434,
+                lng: 118.985141,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-01-20",
+                area: "158 m²",
+                floors: 2,
+                permitNumber: "-"
+            },
+            {
+                id: 3,
+                name: "H. Mithar, S.Pd. M.Pd",
+                address: "Lembang, Kel. Lembang, Kec.Banggae Timur, Kab.Majene, Prov.Sulawesi Barat",
+                lat: -3.536577,
+                lng: 118.990364,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-04-10",
+                area: "192 m²",
+                floors: 1,
+                permitNumber: "-"
+            },
+            {
+                id: 4,
+                name: "Jurail B",
+                address: "Lingk. Lembang, Kel. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5379262,
+                lng: 118.9898247,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-05",
+                area: "108 m²",
+                floors: 2,
+                permitNumber: "-"
+            },
+            {
+                id: 5,
+                name: "MUHAMMAD SALEH, S.Sos",
+                address: "Lingk. Lembang, Kel. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.543683,
+                lng: 118.980044,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-06-12",
+                area: "225 m²",
+                floors: 2,
+                permitNumber: "-"
+            },
+            {
+                id: 6,
+                name: "Muhammad Arsyad, S.Pd, M.Si",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.539273,
+                lng: 118.988795,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-08-01",
+                area: "168 m²",
+                floors: 2,
+                permitNumber: "-"
+            },
+            {
+                id: 7,
+                name: "Hj. Hawa",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.538836,
+                lng: 118.985785,
+                type: "Perumahan dan Perdagangan Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-08-03",
+                area: "120 m²",
+                floors: 1,
+                permitNumber: "-"
+            },
+            {
+                id: 8,
+                name: "ABD KHALIK",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.542072,
+                lng: 118.980195,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-01-09",
+                area: "225 m²",
+                floors: 2,
+                permitNumber: "-" 
+            },
+            {
+                id: 9,
+                name: "HJ. SATRIANI",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5378509,
+                lng: 118.9884926,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-01-09",
+                area: "300 m²",
+                floors: 2,
+                permitNumber: "-" 
+            },
+            {
+                id: 10,
+                name: "NURHAYATI",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.538709,
+                lng: 118.988156,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-02-08",
+                area: "821 m²",
+                floors: 2,
+                permitNumber: "-" 
+            },
+            {
+                id: 11,
+                name: "USRAH",
+                address: "Leppe, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.55333,
+                lng: 118.98387,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-04-11",
+                area: "220 m²",
+                floors: 1,
+                permitNumber: "-" 
+            },
+            {
+                id: 12,
+                name: "NURUL ANNISA",
+                address: "Jl. Djoling, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.541148,
+                lng: 118.984390,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-04-11",
+                area: "377 m²",
+                floors: 1,
+                permitNumber: "-" 
+            },
+            {
+                id: 13,
+                name: "H. DARWIS",
+                address: "Lingk. Lembang, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.538450,
+                lng: 118.986072,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-05-15",
+                area: "360 m²",
+                floors: 1,
+                permitNumber: "-"
+            },
+             {
+                id: 14,
+                name: "A. NUR FARIHA AS",
+                address: "Lembang Dhua, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.542955,
+                lng: 118.987222,
+                type: "Perumahan dan Perdagangan Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-30",
+                area: "460 m²",
+                floors: 2,
+                permitNumber: "-"
+            }  
+        ];
+
+        // Fungsi untuk menghitung jumlah berdasarkan jenis
+        function countByType() {
+            const counts = {
+                "Rumah Tinggal": 0,
+                "Perumahan dan Perdagangan Jasa": 0,
+                "Rumah Kos": 0,
+                "Hunian/Perdagangan & Jasa": 0,
+                "Ruko": 0
+            };
+            
+            buildingData.forEach(building => {
+                if (counts.hasOwnProperty(building.type)) {
+                    counts[building.type]++;
+                }
+            });
+            
+            return counts;
+        }
+        
+        // Fungsi untuk mendapatkan daftar tahun unik dari data
+        function getUniqueYears() {
+            const years = new Set();
+            buildingData.forEach(building => {
+                const year = building.approvalDate.split('-')[0];
+                years.add(year);
+            });
+            return Array.from(years).sort((a, b) => b - a); // Urutkan dari tahun terbaru
+        }
+        
+        // Fungsi untuk mengisi dropdown tahun
+        function populateYearFilter() {
+            const yearFilter = document.getElementById('year-filter');
+            const years = getUniqueYears();
+            
+            // Hapus opsi tahun yang sudah ada (kecuali opsi "Semua Tahun")
+            while (yearFilter.options.length > 1) {
+                yearFilter.remove(1);
+            }
+            
+            // Tambahkan opsi tahun
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+        
+        // Update pilihan dropdown dengan jumlah (tetap dijalankan untuk opsi dropdown)
+        function updateTypeFilterOptions() {
+            const counts = countByType();
+            const typeFilter = document.getElementById('type-filter');
+            
+            // Update opsi dropdown
+            const options = typeFilter.querySelectorAll('option');
+            options.forEach(option => {
+                if (option.value && counts[option.value] !== undefined) {
+                    option.textContent = `${option.value} (${counts[option.value]})`;
+                }
+            });
+        }
+
+        // Inisialisasi peta
+        const map = L.map('map').setView([-3.539273, 118.988795], 13);
+        
+        // Tambahkan tile layer (OpenStreetMap)
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Tambahkan Google Satellite layer
+        const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+        });
+        
+        // Kelompokkan marker berdasarkan status
+        const markerGroups = {
+            Disetujui: L.layerGroup(),
+            Proses: L.layerGroup(),
+            Ditolak: L.layerGroup()
+        };
+        
+        // Tambahkan layer groups ke peta
+        for (const group in markerGroups) {
+            markerGroups[group].addTo(map);
+        }
+        
+        // Buat marker untuk setiap data bangunan
+        const markers = [];
+        
+        buildingData.forEach(building => {
+            // Tentukan warna marker berdasarkan status
+            let markerColor;
+            switch(building.status) {
+                case 'Disetujui':
+                    markerColor = 'green';
+                    break;
+                case 'Proses':
+                    markerColor = 'orange';
+                    break;
+                case 'Ditolak':
+                    markerColor = 'red';
+                    break;
+                default:
+                    markerColor = 'blue';
+            }
+            
+            // Buat custom icon
+            const icon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background-color: ${markerColor}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 2px rgba(0,0,0,0.5);"></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            
+            // Buat marker dan bind popup
+            const marker = L.marker([building.lat, building.lng], { icon: icon })
+                .bindPopup(`
+                    <div class="info-window">
+                        <h3>${building.name}</h3>
+                        <p><strong>Alamat:</strong> ${building.address}</p>
+                        <p><strong>Jenis:</strong> ${building.type}</p>
+                        <p><strong>Status:</strong> ${building.status}</p>
+                        <p><strong>Tanggal Disetujui:</strong> ${building.approvalDate}</p>
+                        <p><strong>Luas Bangunan:</strong> ${building.area}</p>
+                        <p><strong>Jumlah Lantai:</strong> ${building.floors}</p>
+                        <p><strong>No. Izin:</strong> ${building.permitNumber}</p>
+                    </div>
+                `);
+            
+            // Tambahkan marker ke kelompok yang sesuai
+            markerGroups[building.status].addLayer(marker);
+            
+            // Simpan referensi marker dengan data bangunan
+            markers.push({
+                marker: marker,
+                data: building
+            });
+        });
+        
+        // Fungsi untuk menampilkan data di sidebar
+        function renderBuildingList(data) {
+            const dataList = document.getElementById('data-list');
+            dataList.innerHTML = '';
+            
+            if (data.length === 0) {
+                dataList.innerHTML = '<p class="no-data">Tidak ada data yang ditemukan</p>';
+                return;
+            }
+            
+            data.forEach(building => {
+                const item = document.createElement('div');
+                item.className = 'data-item';
+                item.dataset.id = building.id;
+                
+                item.innerHTML = `
+                    <h3>${building.name}</h3>
+                    <p><strong>Alamat:</strong> ${building.address}</p>
+                    <p><strong>Jenis:</strong> ${building.type}</p>
+                    <p><strong>Status:</strong> ${building.status}</p>
+                    <p><strong>Tanggal:</strong> ${building.approvalDate}</p>
+                `;
+                
+                item.addEventListener('click', () => {
+                    // Highlight item yang dipilih
+                    document.querySelectorAll('.data-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // Cari marker yang sesuai dan buka popup
+                    const markerObj = markers.find(m => m.data.id === building.id);
+                    if (markerObj) {
+                        map.setView([markerObj.data.lat, markerObj.data.lng], 15);
+                        markerObj.marker.openPopup();
+                    }
+                });
+                
+                dataList.appendChild(item);
+            });
+        }
+        
+        // Tampilkan semua data awal
+        renderBuildingList(buildingData);
+        
+        // Isi dropdown tahun
+        populateYearFilter();
+        
+        // Update filter options dengan jumlah (hanya untuk teks di dropdown)
+        updateTypeFilterOptions();
+        
+        // Fungsi untuk memfilter data
+        function filterData() {
+            const searchText = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const yearFilter = document.getElementById('year-filter').value;
+            
+            const filteredData = buildingData.filter(building => {
+                const matchesSearch = building.name.toLowerCase().includes(searchText) || 
+                                     building.address.toLowerCase().includes(searchText);
+                const matchesStatus = statusFilter === '' || building.status === statusFilter;
+                const matchesType = typeFilter === '' || building.type === typeFilter;
+                const matchesYear = yearFilter === '' || building.approvalDate.startsWith(yearFilter);
+                
+                return matchesSearch && matchesStatus && matchesType && matchesYear;
+            });
+            
+            renderBuildingList(filteredData);
+            
+            // Sembunyikan semua marker terlebih dahulu
+            for (const group in markerGroups) {
+                markerGroups[group].eachLayer(layer => {
+                    map.removeLayer(layer);
+                });
+            }
+            
+            // Tampilkan hanya marker yang sesuai dengan filter
+            markers.forEach(markerObj => {
+                const building = markerObj.data;
+                const matchesSearch = building.name.toLowerCase().includes(searchText) || 
+                                     building.address.toLowerCase().includes(searchText);
+                const matchesStatus = statusFilter === '' || building.status === statusFilter;
+                const matchesType = typeFilter === '' || building.type === typeFilter;
+                const matchesYear = yearFilter === '' || building.approvalDate.startsWith(yearFilter);
+                
+                if (matchesSearch && matchesStatus && matchesType && matchesYear) {
+                    markerGroups[building.status].addLayer(markerObj.marker);
+                }
+            });
+        }
+        
+        // Tambahkan event listener untuk filter
+        document.getElementById('search-input').addEventListener('input', filterData);
+        document.getElementById('status-filter').addEventListener('change', filterData);
+        document.getElementById('type-filter').addEventListener('change', filterData);
+        document.getElementById('year-filter').addEventListener('change', filterData);
+        
+        // Tambahkan kontrol layer
+        const baseLayers = {
+            "OpenStreetMap": osmLayer,
+            "Google Satellite": googleSatellite
+        };
+        
+        const overlays = {
+            "Disetujui": markerGroups.Disetujui,
+            "Dalam Proses": markerGroups.Proses,
+            "Ditolak": markerGroups.Ditolak
+        };
+        
+        L.control.layers(baseLayers, overlays).addTo(map);
+        
+        // Tambahkan legenda
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `
+                <h4>Keterangan Status</h4>
+                <div><span style="background-color: green"></span> Disetujui</div>
+                <div><span style="background-color: orange"></span> Dalam Proses</div>
+                <div><span style="background-color: red"></span> Ditolak</div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+    </script>
+</body>
+</html>
