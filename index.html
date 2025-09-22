@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kec.Banggae Timur Kab. Majene</title>
+    <title>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kab. Majene</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts - Poppins (Modern Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* Opening Screen Styles */
@@ -16,7 +19,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #1a1a1a;
+            background-color: #1a1a1a; /* Dark background */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -27,34 +30,38 @@
         
         .logo-animation {
             width: 150px;
-            height: 150px;
+            height: 180px;
             margin-bottom: 20px;
             animation: pulse 2s infinite, fadeIn 1.5s ease-out;
+            filter: drop-shadow(0 0 10px rgba(92, 80, 14, 0.7)); /* Subtle glow */
         }
         
         .welcome-text {
-            color: #fff;
-            font-size: 2rem;
-            font-weight: bold;
+            color: #e0e0e0; /* Light grey text */
+            font-size: 2.5rem; /* Larger font */
+            font-weight: 700; /* Bolder */
             text-align: center;
             margin-bottom: 20px;
             opacity: 0;
             animation: fadeIn 1.5s ease-out 0.5s forwards;
+            letter-spacing: 1px; /* Spaced out text */
         }
         
         .loading-bar-container {
-            width: 200px;
-            height: 4px;
-            background-color: #444;
-            border-radius: 2px;
+            width: 250px; /* Wider loading bar */
+            height: 5px; /* Thicker loading bar */
+            background-color: #f7f7f7; /* Darker background for bar */
+            border-radius: 3px;
             overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5); /* Inner shadow */
         }
         
         .loading-bar {
             height: 100%;
             width: 0%;
-            background-color: #5c500e;
+            background: linear-gradient(90deg, #5c500e, #a08d2a); /* Gradient for loading bar */
             animation: loading 2.5s ease-in-out forwards;
+            border-radius: 3px;
         }
         
         @keyframes pulse {
@@ -64,8 +71,8 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes loading {
@@ -73,57 +80,62 @@
             100% { width: 100%; }
         }
         
-        /* Existing styles (tetap sama seperti sebelumnya) */
+        /* Global Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Modern font */
         }
         
         body {
             display: flex;
             flex-direction: column;
             height: 100vh;
-            background-color: #1a1a1a;
+            background-color: #ffffff; /* Even darker background */
             color: #e0e0e0;
+            overflow: hidden; /* Prevent body scroll */
         }
         
         header {
-            background-color: #5c500e;
+            background: linear-gradient(90deg, #a9a60a, #2a2a2a); /* Dark gradient header */
             color: white;
-            padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 1.2rem 1.5rem; /* More padding */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Stronger shadow */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #333; /* Subtle border */
         }
         
         .header-content {
-            flex: 10,5;
+            flex: 1; /* Adjusted flex */
         }
         
         header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem; /* Slightly larger title */
+            margin-bottom: 0.4rem;
             color: #ffffff;
+            font-weight: 600; /* Semi-bold */
+            letter-spacing: 0.5px;
         }
         
         header p {
+            font-size: 0.9rem;
             color: #cccccc;
         }
         
         .logo-container {
             display: flex;
-            gap: 20px;
+            gap: 15px; /* Reduced gap */
             align-items: center;
         }
         
         .logo {
-            height: 80px;
+            height: 70px; /* Slightly smaller logos */
             width: auto;
             object-fit: contain;
-            filter: brightness(0.9);
+            filter: brightness(0.8) drop-shadow(0 0 5px rgba(92, 80, 14, 0.5)); /* Subtle glow on logos */
         }
         
         .container {
@@ -133,46 +145,71 @@
         }
         
         .sidebar {
-            width: 400px;
-            background-color: #2d2d2d;
-            padding: 1rem;
+            width: 380px; /* Slightly narrower sidebar */
+            background-color: #1e1e1e; /* Darker sidebar */
+            padding: 1.5rem; /* More padding */
             overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: 4px 0 15px rgba(0,0,0,0.3); /* Stronger shadow */
             z-index: 1000;
+            border-right: 1px solid #333; /* Subtle border */
         }
         
         .search-container {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .search-container input {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.7rem 1rem; /* More padding */
             border: 1px solid #444;
-            border-radius: 4px;
-            background-color: #3c3c3c;
+            border-radius: 8px; /* More rounded corners */
+            background-color: #2a2a2a; /* Darker input background */
             color: #e0e0e0;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .search-container input:focus {
+            border-color: #000000; /* Accent color on focus */
+            box-shadow: 0 0 8px rgba(239, 204, 0, 0.5); /* Glow on focus */
+            outline: none;
         }
         
         .search-container input::placeholder {
-            color: #999;
+            color: #888;
         }
         
         .filters {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background-color: #3c3c3c;
-            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background-color: #2a2a2a; /* Darker filter background */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
         .filters select {
             width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border: 1px solid #555;
-            border-radius: 4px;
-            background-color: #2d2d2d;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.8rem; /* More space between selects */
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #1e1e1e; /* Darker select background */
             color: #e0e0e0;
+            font-size: 0.95rem;
+            appearance: none; /* Remove default arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.7rem top 50%;
+            background-size: 0.65rem auto;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .filters select:focus {
+            border-color: #bdc70a;
+            box-shadow: 0 0 8px rgba(253, 215, 0, 0.5);
+            outline: none;
         }
         
         .filter-info {
@@ -180,111 +217,163 @@
         }
         
         .data-list {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         
         .data-item {
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            background-color: #3c3c3c;
-            border-radius: 4px;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            background-color: #2a2a2a;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border-left: 3px solid #444;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #444; /* Thicker border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
         .data-item:hover {
-            background-color: #4a4a4a;
+            background-color: #3a3a3a;
+            transform: translateY(-3px); /* Lift effect on hover */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
         
         .data-item.active {
-            background-color: #34495e;
-            border-left: 4px solid #3498db;
+            background-color: #34495e; /* Accent color for active item */
+            border-left: 4px solid #5c500e; /* Accent color border */
+            box-shadow: 0 0 15px rgba(92, 80, 14, 0.6); /* Stronger glow for active */
         }
         
         .data-item h3 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem; /* Slightly larger title */
+            margin-bottom: 0.4rem;
             color: #ffffff;
+            font-weight: 600;
         }
         
         .data-item p {
-            font-size: 0.85rem;
+            font-size: 0.8rem; /* Slightly smaller text */
             color: #b0b0b0;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
         
         #map {
             flex: 1;
             height: 100%;
+            background-color: #121212; /* Dark map background */
         }
         
         /* Style untuk popup peta */
         .leaflet-popup-content-wrapper {
-            background-color: #2d2d2d;
+            background-color: #2a2a2a; /* Dark popup background */
             color: #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px; /* More rounded popup */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid #444;
         }
         
         .leaflet-popup-tip {
-            background-color: #2d2d2d;
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
         }
         
         .info-window {
             font-size: 0.9rem;
+            padding: 5px;
         }
         
         .info-window h3 {
-            margin-bottom: 0.5rem;
-            color: #ffffff;
+            margin-bottom: 0.6rem;
+            color: #ffffff; /* Accent color for popup title */
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         
         .info-window p {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
             color: #cccccc;
+        }
+
+        /* Custom marker icon style */
+        .custom-div-icon {
+            background-color: transparent;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .legend {
-            padding: 10px;
-            background: #2d2d2d;
-            border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-            line-height: 1.5;
+            padding: 12px; /* More padding */
+            background: #2a2a2a; /* Dark legend background */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            line-height: 1.6; /* More line height */
             color: #e0e0e0;
+            border: 1px solid #444;
         }
         
         .legend h4 {
             margin: 0 0 10px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #ffffff;
+            font-weight: 600;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .legend span {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 5px;
+            width: 14px; /* Larger color swatch */
+            height: 14px;
+            margin-right: 8px;
             border-radius: 50%;
+            border: 1px solid #555; /* Border for color swatch */
+            vertical-align: middle;
         }
         
         /* Style untuk layer control */
         .leaflet-control-layers {
-            background-color: #2d2d2d;
-            color: #e0e0e0;
+            background-color: #2a2a2a !important; /* Darker control background */
+            color: #e0e0e0 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important;
+            border: 1px solid #444 !important;
         }
         
         .leaflet-control-layers-toggle {
-            background-color: #3c3c3c;
+            background-color: #3a3a3a !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            transition: background-color 0.3s ease;
+        }
+
+        .leaflet-control-layers-toggle:hover {
+            background-color: #5c500e !important; /* Accent color on hover */
         }
         
         .leaflet-control-zoom a {
-            background-color: #2d2d2d;
-            color: #e0e0e0;
-            border-bottom: 1px solid #444;
+            background-color: #2a2a2a !important;
+            color: #e0e0e0 !important;
+            border-bottom: 1px solid #444 !important;
+            border-radius: 8px !important; /* Rounded zoom buttons */
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease;
         }
         
         .leaflet-control-zoom a:hover {
-            background-color: #3c3c3c;
+            background-color: #5c500e !important; /* Accent color on hover */
+        }
+
+        .leaflet-control-zoom a:first-child {
+            border-top-left-radius: 8px !important;
+            border-top-right-radius: 8px !important;
+        }
+
+        .leaflet-control-zoom a:last-child {
+            border-bottom-left-radius: 8px !important;
+            border-bottom-right-radius: 8px !important;
+            border-bottom: none !important;
         }
         
         @media (max-width: 768px) {
@@ -294,21 +383,73 @@
             
             .sidebar {
                 width: 100%;
-                height: 40%;
+                height: 45%; /* Slightly more height for sidebar on mobile */
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid #333;
             }
             
             #map {
-                height: 60%;
+                height: 55%;
             }
             
             header {
                 flex-direction: column;
                 text-align: center;
+                padding: 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            header p {
+                font-size: 0.8rem;
             }
             
             .logo-container {
-                margin-top: 15px;
+                margin-top: 10px;
                 justify-content: center;
+                gap: 10px;
+            }
+
+            .logo {
+                height: 70px;
+            }
+
+            .welcome-text {
+                font-size: 1.8rem;
+            }
+
+            .loading-bar-container {
+                width: 180px;
+            }
+
+            .search-container {
+                margin-bottom: 1rem;
+            }
+
+            .filters {
+                padding: 1rem;
+            }
+
+            .filters select {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.8rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .data-item {
+                padding: 1rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .data-item h3 {
+                font-size: 1rem;
+            }
+
+            .data-item p {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -326,7 +467,7 @@
     <!-- Konten utama (tetap sama seperti sebelumnya) -->
     <header>
         <div class="header-content">
-            <h1>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kec.Banggae Timur Kab. Majene</h1>
+            <h1>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kab. Majene</h1>
             <p>Data dan peta lokasi bangunan gedung yang telah mendapatkan persetujuan</p>
         </div>
         <div class="logo-container">
@@ -538,7 +679,7 @@
             {
                 id: 10,
                 name: "NURHAYATI",
-                address: "Lingk. Tulu, Kel./Ds. Labuang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                address: "Lingk. Tulu, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
                 lat: -3.538709,
                 lng: 118.988156,
                 type: "Ruko",
@@ -624,11 +765,731 @@
                 permitNumber: "-",
                 kelurahan: "Labuang Utara",
                 kecamatan: "Banggae Timur" 
-            }
+            },
+            {
+                id: 16,
+                name: "ARDI",
+                address: "Poniang Utara, Kel./Ds. Tallubanua, Kec.Sendana, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.291059,
+                lng: 118.856384,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-03-18",
+                area: "112m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Tallubanua",
+                kecamatan: "Sendana" 
+            },
+            {
+                id: 17,
+                name: "MUH. ALWI NASIR",
+                address: "Podang Selatan, Kel./Ds. Banua Sendana, Kec.Sendana, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.304675,
+                lng: 118.860990,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-03-18",
+                area: "30 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Banua Sendana",
+                kecamatan: "Sendana" 
+            },
+            {
+                id: 18,
+                name: "ABDUL RAHIM",
+                address: "Kappung Totolisi Tengah, Kel./Ds. Totolisi Sendana, Kec.Sendana, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.304675,
+                lng: 118.860990,
+                type: "Karantina Hewan",
+                status: "Disetujui",
+                approvalDate: "2025-03-21",
+                area: "30 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Totolisi Sendana",
+                kecamatan: "Sendana" 
+            },
+            {
+                id: 19,
+                name: "ALI SADIKIN, S.IP",
+                address: "Poros Teppo-Camba Utara, Kel./Ds. Baru, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.546605,
+                lng: 118.949187,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-04-02",
+                area: "109 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Baru",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 20,
+                name: "MUHAMMAD RUSDI",
+                address: "Lingkungan Salabulo, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.546605,
+                lng: 118.949187,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-04-02",
+                area: "90 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+             {
+                id: 21,
+                name: "MUH.ARIEF GUNAWAN",
+                address: "Jl. Manunggal Galung Selatan, Kel./Ds. Galung, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5466057,
+                lng: 118.9491877,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-04-02",
+                area: "112 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Galung",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 22,
+                name: "INDRIYANI ASTUTI LAYN",
+                address: "Galung Selatan, Kel./Ds. Galung, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5466067,
+                lng: 118.949183,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-04-04",
+                area: "144 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Galung",
+                kecamatan: "Banggae" 
+            },
+             {
+                id: 23,
+                name: "HASAN, S.Ag, M.H",
+                address: "Jl. Wahab Azasi, Kel./Ds. Labuang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.540150,
+                lng: 118.973250,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-04-02",
+                area: "419 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang Utara",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 24,
+                name: "ABD. RAHMAN",
+                address: "Lingk. Deteng-Deteng, Kel./Ds. Totoli, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549864,
+                lng: 118.947105,
+                type: "Industri Minuman",
+                status: "Disetujui",
+                approvalDate: "2025-04-04",
+                area: "419 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Totoli",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 25,
+                name: "AMIR",
+                address: "Jl. Mayjen Azis Bustam, Kel./Ds. Banggae, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.538420,
+                lng: 118.968031,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-04-04",
+                area: "394 m²",
+                floors: 5,
+                permitNumber: "-",
+                kelurahan: "Banggae",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 26,
+                name: "NURSYAM ANWAR, SE. M.Si",
+                address: "Lingk. Salabulo, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.529305,
+                lng: 118.982666,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-04-25",
+                area: "112.5 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 27,
+                name: "Sri Rahayu Dahlan, ST,S.Farm, M.Si",
+                address: "Poros Majene-Mamuju, Kel./Ds. Pangali Ali, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.548925,
+                lng: 118.956344,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-05-04",
+                area: "196 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Pangali Ali",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 28,
+                name: "ARJUN",
+                address: "Lingk. Baurung,, Kel./Ds. Baurung, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.545168,
+                lng: 118.991024,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-05-10",
+                area: "84 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Baurung",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 29,
+                name: "PT. Dayamitra Telekomunikasi Tbk",
+                address: "Lingk. Sasende,, Kel./Ds. Malunda, Kec.Malunda, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.012080,
+                lng: 118.856437,
+                type: "Tower Telekomunikasi",
+                status: "Disetujui",
+                approvalDate: "2025-05-10",
+                area: "- m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Malunda",
+                kecamatan: "Malunda" 
+            },
+            {
+                id: 30,
+                name: "PT. Dayamitra Telekomunikasi Tbk",
+                address: "Dusun Pallarangan,, Kel./Ds. Simbang, Kec.Pamboang, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.498226,
+                lng: 118.894135,
+                type: "Tower Telekomunikasi",
+                status: "Disetujui",
+                approvalDate: "2025-05-15",
+                area: "144 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Simbang",
+                kecamatan: "Pamboang" 
+            },
+            {
+                id: 31,
+                name: "SUSANTO",
+                address: "Jl. Hertasning, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.540923,
+                lng: 118.980679,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-05-18",
+                area: "78 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 32,
+                name: "INDRA SARI MUIN",
+                address: "Lingkungan Garogo Selatan, Kel./Ds. Baru, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549000,
+                lng: 118.954722,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-05-21",
+                area: "108m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Baru",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 33,
+                name: "ABD. RAHMAN T",
+                address: "Lingk. Salabulo, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.528877,
+                lng: 118.981697,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-05-27",
+                area: "120 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 34,
+                name: "NURBAYA",
+                address: "Labu-labuang, Kel./Ds. Palipi Soreang, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549402,
+                lng: 118.927718,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-05-31",
+                area: "49 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Palipi Soreang",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 35,
+                name: "ZAINUDDIN",
+                address: "Jl. Melati, Kel./Ds. Labuang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5405775,
+                lng: 118.9755647,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-06-07",
+                area: "156 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Labuang Utara",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 36,
+                name: "NURBIANA (RM Lembo)",
+                address: "Jl. KH. Sirajuddin Salam, Kel./Ds. Labuang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.544372,
+                lng: 118.971331,
+                type: "Rumah Makan",
+                status: "Disetujui",
+                approvalDate: "2025-06-05",
+                area: "192 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 37,
+                name: "ARHAM, S.Sos",
+                address: "Jl. Rangas, Kel./Ds. Rangas, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.563458,
+                lng: 118.942708,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-06-08",
+                area: "72 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Rangas",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 38,
+                name: "Drs. RUSTAN",
+                address: "Lingk. Salabulo, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.531745,
+                lng: 118.988762,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-10",
+                area: "80 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 39,
+                name: "SYAHRUL",
+                address: "Jl. Poros Majene-Mamuju, Kel./Ds. Mekkatta Selatan, Kec.Malunda, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -2.9652295,
+                lng: 118.8650037,
+                type: "Tower Telekomunikasi",
+                status: "Disetujui",
+                approvalDate: "2025-06-12",
+                area: "198 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Mekkatta Selatan",
+                kecamatan: "Malunda" 
+            },
+            {
+                id: 40,
+                name: "SULPIANA",
+                address: "Jl. Poros Majene-Mamuju, Kel./Ds. Mosso, Kec.Sendana, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.377811,
+                lng: 118.847830,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-06-15",
+                area: "154 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Mosso",
+                kecamatan: "Sendana" 
+            },
+            {
+                id: 41,
+                name: "H. RUDY ZAINUDDIN (Sikapaya)",
+                address: "Jl. Jend. Sudirman, Kel./Ds. Labuang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.543616,
+                lng: 118.970224,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-06-11",
+                area: "297 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 42,
+                name: "H. ABD. KHAIR, S.Ag",
+                address: "Jl. Manunggal, Kel./Ds. Banggae, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.533391,
+                lng: 118.969503,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-06-04",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Banggae",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 43,
+                name: "ISMAIL, S.Pd",
+                address: "Jl. Poros Majen-Mamuju, Kel./Ds. Mekkatta, Kec.Malunda, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -2.9520315,
+                lng: 118.8701307,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-06-19",
+                area: "216 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Mekkatta",
+                kecamatan: "Malunda" 
+            },
+            {
+                id: 44,
+                name: "HJ. MACHDA MAHMUD",
+                address: "Jl. Mustafa Kamal, Lingk. Battayang, Kel./Ds. Banggae, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.543567,
+                lng: 118.966659,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-23",
+                area: "198 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Banggae",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 45,
+                name: "H. ABD. RAJAB",
+                address: "Lingk. Lutang,, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.531571,
+                lng: 118.994985,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-20",
+                area: "208 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 46,
+                name: "Hj. SYARIFAH ELIDAYANTI, SKM, M. Kes",
+                address: "Jl. KH. Wahab Azasi Lingk. Lipu, Kel./Ds. Labuang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.539364,
+                lng: 118.970161,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-06-25",
+                area: "190 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang Utara",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 47,
+                name: "PT. Samalewa Citra Properti",
+                address: "Perumahan Malewa Citra Residence Lingk. Deteng-deteng, Kel./Ds. Totoli, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.550873,
+                lng: 118.942210,
+                type: "Perumahan",
+                status: "Disetujui",
+                approvalDate: "2025-06-24",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Totoli",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 48,
+                name: "ILHAM",
+                address: "Lingk. Lembang, Kel./Ds. Lembang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.539364,
+                lng: 118.970161,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-06-25",
+                area: "216.3 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur" 
+            },
+               {
+                id: 49,
+                name: "'EMMI ARISASMITA",
+                address: "Lingk. Salabulo, Kel./Ds. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5315865,
+                lng: 118.9792212,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-07-09",
+                area: "272.3 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 50,
+                name: "MANSUR",
+                address: "JL. Mayjend. Azis Bustan, Lingk. Pakkola, Kel./Ds. Banggae, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549402,
+                lng: 118.927718,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-07-11",
+                area: "300 m²",
+                floors: 3,
+                permitNumber: "-",
+                kelurahan: "Banggae",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 51,
+                name: "MUHAMMAD JUPRI. DJ",
+                address: "Jl. Poros Majene, Dusun Bonde-Bonde, Kel./Ds. Bonde Utara, Kec.Pamboang, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.528474,
+                lng: 118.910920,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-07-15",
+                area: "204.75 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Bonde Utara",
+                kecamatan: "Pamboang" 
+            },
+            {
+                id: 52,
+                name: "ISMAIL",
+                address: "Lingk. Lembang Dhua, Kel./Ds. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.539325,
+                lng: 118.993387,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-07-19",
+                area: "240 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 53,
+                name: "SUBAER (Hutan Kota)",
+                address: "Baurung, Kel./Ds. Baurung, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.529468,
+                lng: 118.979353,
+                type: "Rumah Kos",
+                status: "Ditolak",
+                approvalDate: "2025-07-12",
+                area: "120 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Baurung",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 54,
+                name: "Ir. Endra, ST",
+                address: "Jl. A. Wahab Azasi, Kel./Ds. Labuang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.543308,
+                lng: 118.969170,
+                type: "Toko",
+                status: "Disetujui",
+                approvalDate: "2025-07-21",
+                area: "136 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 55,
+                name: "ARIFIN",
+                address: "Lingk. Lembang, Kel./Ds. Lembang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.536375,
+                lng: 118.988189,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-07-25",
+                area: "144 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 56,
+                name: "FAJRIANSYAH, S.Pd",
+                address: "Lingk. Udzung, Kel./Ds. Sirindu, Kec.Pamboang, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.427835,
+                lng: 118.871345,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-07-27",
+                area: "77 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Sirindu",
+                kecamatan: "Pamboang" 
+            },
+            {
+                id: 57,
+                name: "BADARIAH ALIMUDDIN, S.Ag",
+                address: "Jl. Andi Tonra No. 9 Saleppa, Kel./Ds. Banggae, Kec.Banggae, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.541084,
+                lng: 118.968379,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2025-07-27",
+                area: "90 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Banggae",
+                kecamatan: "Banggae" 
+            },
+            {
+                id: 58,
+                name: "PT. Asya Sejahtera",
+                address: "Jalan Lettu Muh. Yamin, Leppe Barat, Perumahan Tafariz Royal Hills Blok A1-A8, B1-B20, C1-C24, dan D1-D18, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.548217,
+                lng: 118.977844,
+                type: "Perumahan",
+                status: "Disetujui",
+                approvalDate: "2025-07-27",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Labuang",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 59,
+                name: "HASBI",
+                address: "Sasande, Kel. Malunda, Kec.Malunda, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.008803,
+                lng: 118.856781,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-07-27",
+                area: "198 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Malunda",
+                kecamatan: "Malunda" 
+            },
+            {
+                id: 60,
+                name: "PT. Sinar Mandar",
+                address: "MUTIARA ADZALINA RESIDENCE 2, Kel. Lembang, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat:  -3.536777,
+                lng: 118.983664,
+                type: "Perumahan",
+                status: "Disetujui",
+                approvalDate: "2025-07-27",
+                area: "198 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur" 
+            }, 
+            {
+                id: 61,
+                name: "Dr. Sri Gustina, S.Pt. M.Si",
+                address: "Kel. Tande Timur, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat:  -3.528500,
+                lng: 118.979807,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2025-07-28",
+                area: "144 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            },
+            {
+                id: 62,
+                name: "MUH. NATSIR NUR",
+                address: "Jl. Lanto Dg. Passewang, Kel./Ds. Labuang Utara, Kec.Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat:  -3.540609,
+                lng: 118.969231,
+                type: "Ruko",
+                status: "Disetujui",
+                approvalDate: "2025-07-29",
+                area: "90 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Labuang Utara",
+                kecamatan: "Banggae Timur" 
+            }, 
+            {
+                id: 63,
+                name: "NARDI",
+                address: "Lingk. Sababulo, Kel. Tande Timur, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.529180,
+                lng: 118.981605,
+                type: "Hunian/Perdagangan & Jasa",
+                status: "Disetujui",
+                approvalDate: "2025-07-29",
+                area: "144 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Tande Timur",
+                kecamatan: "Banggae Timur" 
+            } 
                ];
 
         // Inisialisasi peta
-        const map = L.map('map').setView([-3.54, 118.985], 14);
+        const map = L.map('map').setView([-3.54, 118.985], 13);
 
         // Fungsi untuk menghitung jumlah berdasarkan jenis
         function countByType() {
@@ -637,13 +1498,21 @@
                 "Perumahan dan Perdagangan Jasa": 0,
                 "Rumah Kos": 0,
                 "Hunian/Perdagangan & Jasa": 0,
-                "Ruko": 0
-                
+                "Ruko": 0,
+                "Karantina Hewan": 0,
+                "Perumahan": 0,
+                "Tower Telekomunikasi": 0,
+                "Rumah Makan": 0,
+                "Industri Minuman": 0,
+                "Toko": 0
             };
             
             buildingData.forEach(building => {
                 if (counts.hasOwnProperty(building.type)) {
                     counts[building.type]++;
+                } else {
+                    // Tambahkan jenis baru jika belum ada di daftar
+                    counts[building.type] = 1;
                 }
             });
             
@@ -669,6 +1538,17 @@
         };
 
         L.control.layers(baseMaps).addTo(map);
+
+        // Fungsi untuk mengunduh data bangunan (fungsi ini tidak akan dipanggil lagi jika tombol dihapus)
+        function downloadBuildingData(building) {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(building, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `data_bangunan_${building.id}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
 
         // Tambahkan marker untuk setiap data bangunan
         const markers = [];
@@ -709,6 +1589,8 @@
                         <p><strong>Tanggal:</strong> ${building.approvalDate}</p>
                         <p><strong>Luas:</strong> ${building.area}</p>
                         <p><strong>Lantai:</strong> ${building.floors}</p>
+                        <!-- Baris berikut telah dihapus/dikomentari untuk menghilangkan tombol download -->
+                        <!-- <button onclick='downloadBuildingData(${JSON.stringify(building)})'>Download Data</button> -->
                     </div>
                 `);
             
@@ -716,19 +1598,6 @@
             marker.buildingData = building;
             markers.push(marker);
         });
-
-        // Fungsi untuk menghitung jumlah data berdasarkan jenis
-        function countByType() {
-            const counts = {};
-            buildingData.forEach(building => {
-                if (counts[building.type]) {
-                    counts[building.type]++;
-                } else {
-                    counts[building.type] = 1;
-                }
-            });
-            return counts;
-        }
 
         // Fungsi untuk menampilkan data di sidebar
         function renderDataList(data) {
@@ -767,9 +1636,14 @@
             const typeFilter = document.getElementById('type-filter');
             
             // Dapatkan nilai unik untuk setiap filter
-            const kelurahans = [...new Set(buildingData.map(b => b.kelurahan))];
-            const kecamatans = [...new Set(buildingData.map(b => b.kecamatan))];
-            const years = [...new Set(buildingData.map(b => b.approvalDate.substring(0, 4)))];
+            let kelurahans = [...new Set(buildingData.map(b => b.kelurahan))];
+            let kecamatans = [...new Set(buildingData.map(b => b.kecamatan))];
+            let years = [...new Set(buildingData.map(b => b.approvalDate.substring(0, 4)))];
+            
+            // Urutkan secara alfabetis/numerik
+            kelurahans.sort();
+            kecamatans.sort();
+            years.sort((a, b) => a - b); // Urutkan tahun secara numerik
             
             // Hitung jumlah berdasarkan jenis
             const typeCounts = countByType();
@@ -798,13 +1672,14 @@
                 yearFilter.appendChild(option);
             });
             
-            // Isi filter jenis dengan jumlah data
-            for (const [type, count] of Object.entries(typeCounts)) {
+            // Isi filter jenis dengan jumlah data dan urutkan berdasarkan nama jenis
+            const sortedTypes = Object.keys(typeCounts).sort();
+            sortedTypes.forEach(type => {
                 const option = document.createElement('option');
                 option.value = type;
-                option.textContent = `${type} (${count})`;
+                option.textContent = `${type} (${typeCounts[type]})`;
                 typeFilter.appendChild(option);
-            }
+            });
         }
 
         // Fungsi untuk memfilter data
