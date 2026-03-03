@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kab. Majene</title>
+    <title>SIPAMANDAR-GIS</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="gambar/gambar/gambar_3.png">
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -29,8 +32,8 @@
         }
         
         .logo-animation {
-            width: 150px;
-            height: 180px;
+            width: 300px;
+            height: 300px;
             margin-bottom: 20px;
             animation: pulse 2s infinite, fadeIn 1.5s ease-out;
             filter: drop-shadow(0 0 10px rgba(92, 80, 14, 0.7)); /* Subtle glow */
@@ -457,7 +460,7 @@
 <body>
     <!-- Opening Screen -->
     <div id="opening-screen">
-        <img src="gambar/gambar/gambar_1.png" alt="Logo Majene" class="logo-animation">
+        <img src="gambar/gambar/gambar_3.png" alt="Logo Majene" class="logo-animation">
         <div class="welcome-text">Selamat Datang</div>
         <div class="loading-bar-container">
             <div class="loading-bar"></div>
@@ -467,12 +470,85 @@
     <!-- Konten utama (tetap sama seperti sebelumnya) -->
     <header>
         <div class="header-content">
-            <h1>WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kab. Majene</h1>
-            <p>Data dan peta lokasi bangunan gedung yang telah mendapatkan persetujuan</p>
+            <h1>SIPAMANDAR - GIS</h1>
+            <!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    margin: 20px 0 20px 20px; /* tetap kiri */
+    letter-spacing: 3px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+    /* Gradient utama */
+    background: linear-gradient(
+        270deg,
+        #0a3d62,
+        #1e90ff,
+        #00f2fe,
+        #00b894,
+        #1e90ff,
+        #0a3d62
+    );
+    background-size: 500% 500%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: gradientMove 8s ease infinite;
+    transition: all 0.4s ease;
+}
+
+/* Gradient bergerak */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Efek radar sweep */
+h1::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: sweep 4s infinite;
+}
+
+/* Animasi sweep */
+@keyframes sweep {
+    0% { left: -100%; }
+    100% { left: 150%; }
+}
+
+/* Hover lebih futuristik */
+h1:hover {
+    transform: scale(1.1);
+    text-shadow:
+        0 0 10px rgba(30,144,255,0.7),
+        0 0 20px rgba(0,242,254,0.7),
+        0 0 30px rgba(0,184,148,0.7);
+}
+</style>
+            <p>“SISTEM INFORMASI PENDATAAN MANAJEMEN PERSETUJUAN BANGUNAN GEDUNG BERBASIS WEBGIS (GEOGRAFIS INFORMASI SISTEM) Kabupaten Majene"</p>
         </div>
         <div class="logo-container">
             <img src="gambar/gambar/gambar_1.png" alt="Logo Majene" class="logo">
             <img src="gambar/gambar/gambar_2.png" alt="Logo PUPR" class="logo">
+            <img src="gambar/gambar/gambar_3.png" alt="Logo S" class="logo">
         </div>
     </header>
     
@@ -2011,8 +2087,218 @@
                 kelurahan: "Lembang",
                 kecamatan: "Banggae Timur"  
             }, 
-            
-            
+            {
+                id: 98,
+                name: "Erni Lestari Ilbas",
+                address: "Perum. Griya Pesona Lembang Blok K4, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.545118,
+                lng: 118.985023,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-04-28",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 99,
+                name: "Ridwan",
+                address: "Jl. Jend. Sudirman, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.542906,
+                lng: 118.984293,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-05-05",
+                area: "156 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 100,
+                name: "HARTINA",
+                address: "Lingk. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.539009,
+                lng: 118.993739,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-05-09",
+                area: "98 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 101,
+                name: "Amanda Baashitu Askari",
+                address: "BTN Griya Tanampali Blok F No. 5, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549645,
+                lng: 118.988021,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-05-12",
+                area: "114 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 102,
+                name: "PT. Khairat Bangun Konstruksi",
+                address: "Perum Majene Villa Square, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.533103,
+                lng: 118.994533,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-05-17",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 102,
+                name: "PT. Khairat Bangun Konstruksi",
+                address: "Perum Majene Villa Square, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.533103,
+                lng: 118.994533,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-06-17",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 103,
+                name: "PT. Putri Jauzan Bangun Mandar",
+                address: "Jl. Surullah, Lingk. Lembang Dhua, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.540099,
+                lng: 118.970815,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-10-18",
+                area: "72 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 104,
+                name: "JONI RIBA",
+                address: "Lingk. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.542497,
+                lng: 118.986875,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-11-08",
+                area: "42 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 105,
+                name: "Awaluddin Aco",
+                address: "Jl. AMD, Kel. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.545326,
+                lng: 118.985122,
+                type: "Rumah Kos",
+                status: "Disetujui",
+                approvalDate: "2023-11-23",
+                area: "56 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 106,
+                name: "dr. Hj. ARDAYANTI",
+                address: "Jl. Syaikh Syafiq, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.547024,
+                lng: 118.972426,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-11-28",
+                area: "61 m²",
+                floors: 3,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 107,
+                name: "HJ. NURDIATI RUSDI",
+                address: "Lingk. Lembang, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.5314439,
+                lng: 118.9868304,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-11-30",
+                area: "120 m²",
+                floors: 2,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 108,
+                name: "PT. Putri Jauzan Bangun Mandar",
+                address: "Perum Griya Tanampali Lembang Indah 2, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.549176,
+                lng: 118.987797,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-11-29",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 109,
+                name: "Muhammad Sabri, SE",
+                address: "Perum Alfath- Hills  D2/1, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.551618,
+                lng: 118.984768,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-12-07",
+                area: "45 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+            {
+                id: 110,
+                name: "PT. Pelangi Citra Mandiri Mammesa",
+                address: "Perum Ayub Residence, Kel/Desa. Lembang, Kec. Banggae Timur, Kab. Majene, Prov. Sulawesi Barat",
+                lat: -3.553564,
+                lng: 118.985684,
+                type: "Rumah Tinggal",
+                status: "Disetujui",
+                approvalDate: "2023-12-11",
+                area: "36 m²",
+                floors: 1,
+                permitNumber: "-",
+                kelurahan: "Lembang",
+                kecamatan: "Banggae Timur"  
+            }, 
+
+
             
                ];
 
