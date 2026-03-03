@@ -6,7 +6,7 @@
     <title>SIPAMANDAR-GIS</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="gambar/gambar/gambar_3.png">
+    <link rel="icon" type="image/png" href="gambar/gambar/gambar_1.png">
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -263,6 +263,11 @@
             flex: 1;
             height: 100%;
             background-color: #121212; /* Dark map background */
+            #map {
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
         }
         
         /* Style untuk popup peta */
@@ -457,6 +462,9 @@
         }
     </style>
 </head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <body>
     <!-- Opening Screen -->
     <div id="opening-screen">
@@ -543,7 +551,7 @@ h1:hover {
         0 0 30px rgba(0,184,148,0.7);
 }
 </style>
-            <p>“SISTEM INFORMASI PENDATAAN MANAJEMEN PERSETUJUAN BANGUNAN GEDUNG BERBASIS WEBGIS (GEOGRAFIS INFORMASI SISTEM) Kabupaten Majene"</p>
+            <p>“SISTEM INFORMASI PENDATAAN MANAJEMEN PERSETUJUAN BANGUNAN GEDUNG KABUPATEN MAJENE"</p>
         </div>
         <div class="logo-container">
             <img src="gambar/gambar/gambar_1.png" alt="Logo Majene" class="logo">
@@ -2573,5 +2581,33 @@ h1:hover {
         };
         legend.addTo(map);
     </script>
+    <script src="data/Peta_Batas_0.js"></script>
+    
+    <script>
+
+// 1️⃣ Buat map
+var map = L.map('map').setView([-3.5, 118.9], 11);
+
+// 2️⃣ Tambahkan basemap
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// 3️⃣ Tambahkan layer batas
+var batasLayer = L.geoJSON(json_Peta_Batas_0, {
+    style: {
+        color: "#000000",
+        weight: 1,
+        fillColor: "#1e90ff",
+        fillOpacity: 0.5
+    },
+    onEachFeature: function(feature, layer){
+        layer.bindPopup("Kecamatan: " + feature.properties.KECAMATAN);
+    }
+}).addTo(map);
+// 4️⃣ Zoom otomatis ke batas
+map.fitBounds(batasLayer.getBounds());
+</script>
+    
 </body>
 </html>
