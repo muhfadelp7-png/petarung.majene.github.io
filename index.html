@@ -260,46 +260,78 @@
         }
         
         #map {
-            flex: 1;
-            height: 100%;
-            background-color: #121212; /* Dark map background */
-            #map {
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    flex: 1;
+    height: 100%;
+    background-color: #121212;
+    border-radius: 12px;
     overflow: hidden;
 }
-        }
         
         /* Style untuk popup peta */
+
+    
+
         .leaflet-popup-content-wrapper {
-            background-color: #2a2a2a; /* Dark popup background */
-            color: #e0e0e0;
-            border-radius: 10px; /* More rounded popup */
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            border: 1px solid #444;
-        }
+    position: relative;
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    overflow: hidden;
+}
+/* Border emas animasi */
+.leaflet-popup-content-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    padding: 2px;
+    background: linear-gradient(
+        270deg,
+        #ffd700,
+        #ffcc00,
+        #b8860b,
+        #ffd700
+    );
+    background-size: 400% 400%;
+    animation: goldBorderMove 4s linear infinite;
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+}
+
+@keyframes goldBorderMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.leaflet-popup-tip {
+    background: #000000 !important;
+}
         
         .leaflet-popup-tip {
             background-color: #2a2a2a;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.4);
         }
         
-        .info-window {
-            font-size: 0.9rem;
-            padding: 5px;
-        }
+     .info-window {
+    transition: all 0.3s ease;
+}
+.info-window:hover {
+    transform: scale(1.02);
+}
         
-        .info-window h3 {
-            margin-bottom: 0.6rem;
-            color: #ffffff; /* Accent color for popup title */
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
+.info-window h3 {
+    color: #ffd700;
+}
         
-        .info-window p {
-            margin-bottom: 0.3rem;
-            color: #cccccc;
-        }
+      .info-window p {
+    color: #ffffff;
+}
 
         /* Custom marker icon style */
         .custom-div-icon {
@@ -463,6 +495,7 @@
     </style>
 </head>
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <body>
@@ -2311,8 +2344,9 @@ h1:hover {
                ];
 
         // Inisialisasi peta
+        console.log("TEST FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
         const map = L.map('map').setView([-3.54, 118.985], 13);
-
+            
         // Fungsi untuk menghitung jumlah berdasarkan jenis
         function countByType() {
             const counts = {
@@ -2342,23 +2376,39 @@ h1:hover {
         }
 
         // Tambahkan tile layer (peta dasar)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'iles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         }).addTo(map);
+
+        console.log("CEK FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
+
+        if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
+         L.geoJSON(json_BATAS_ADMINISTRATIF_AR_0, {
+         style: {
+            color: "red",
+            weight: 3,
+            fillOpacity: 0
+          }
+            }).addTo(map);
+
+} else {
+    console.log("FILE BELUM TERBACA");
+}
 
         // Tambahkan layer satelit
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
-
+        
         // Tambahkan layer kontrol
         const baseMaps = {
             "Peta Standar": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }),
             "Peta Satelit": satelliteLayer
+        
         };
-
+        
         L.control.layers(baseMaps).addTo(map);
 
         // Fungsi untuk mengunduh data bangunan (fungsi ini tidak akan dipanggil lagi jika tombol dihapus)
@@ -2550,6 +2600,23 @@ h1:hover {
             });
         }
 
+        // ===== CEK DATA ADA ATAU TIDAK =====
+console.log(typeof json_BATAS_ADMINISTRATIF_AR_0);
+
+// ===== TAMBAH LAYER =====
+if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
+
+   L.geoJSON(json_BATAS_ADMINISTRATIF_AR_0, {
+    style: {
+        color: "red",
+        weight: 3,
+        fillOpacity: 0
+    }
+}).addTo(map);
+
+} else {
+    console.log("DATA TIDAK TERBACA");
+}
         // Inisialisasi
         document.addEventListener('DOMContentLoaded', () => {
             // Tampilkan semua data awal
@@ -2581,33 +2648,8 @@ h1:hover {
         };
         legend.addTo(map);
     </script>
-    <script src="data/Peta_Batas_0.js"></script>
-    
-    <script>
-
-// 1️⃣ Buat map
-var map = L.map('map').setView([-3.5, 118.9], 11);
-
-// 2️⃣ Tambahkan basemap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-}).addTo(map);
-
-// 3️⃣ Tambahkan layer batas
-var batasLayer = L.geoJSON(json_Peta_Batas_0, {
-    style: {
-        color: "#000000",
-        weight: 1,
-        fillColor: "#1e90ff",
-        fillOpacity: 0.5
-    },
-    onEachFeature: function(feature, layer){
-        layer.bindPopup("Kecamatan: " + feature.properties.KECAMATAN);
-    }
-}).addTo(map);
-// 4️⃣ Zoom otomatis ke batas
-map.fitBounds(batasLayer.getBounds());
-</script>
-    
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data/BATAS_ADMINISTRATIF_AR_0.js"></script> </body>
+</html>
 </body>
 </html>
