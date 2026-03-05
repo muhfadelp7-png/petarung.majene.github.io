@@ -2394,43 +2394,26 @@ h1:hover {
         console.log("TEST FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
         const map = L.map('map').setView([-3.54, 118.985], 13);
 
-/* ============================= */
-/* 📍 GPS FIXED VERSION */
+        /* ============================= */
+/* 📍 GPS DENGAN ICON ORANG */
 /* ============================= */
 
-let userMarker = null;
-let userCircle = null;
+let userMarker;
+let userCircle;
 
-/* Icon orang berdiri dengan background bulat */
 const personIcon = L.divIcon({
-    className: "",
-    html: `
-        <div style="
-            background:#1e90ff;
-            width:40px;
-            height:40px;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:20px;
-            color:white;
-            box-shadow:0 0 15px rgba(30,144,255,0.8);
-        ">
-            🧍
-        </div>
-    `,
-    iconSize: [40, 40],
-    iconAnchor: [20, 20]
+    className: "custom-user-icon",
+    html: "🧍",
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
 });
 
-/* Tombol GPS */
-const locateBtn = L.control({ position: 'topleft' });
+const locateBtn = L.control({position: 'topleft'});
 
-locateBtn.onAdd = function () {
-    const div = L.DomUtil.create('div', 'leaflet-bar');
+locateBtn.onAdd = function(map) {
+    const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
     div.innerHTML = "📍";
-    div.style.background = "#2a2a2a";
+    div.style.backgroundColor = "#2a2a2a";
     div.style.width = "40px";
     div.style.height = "40px";
     div.style.display = "flex";
@@ -2440,15 +2423,9 @@ locateBtn.onAdd = function () {
     div.style.fontSize = "20px";
     div.style.borderRadius = "8px";
 
-    L.DomEvent.disableClickPropagation(div);
-
-    div.onclick = function () {
-        map.locate({
-            setView: true,
-            maxZoom: 17,
-            enableHighAccuracy: true
-        });
-    };
+    div.onclick = function(){
+        map.locate({setView: true, maxZoom: 17});
+    }
 
     return div;
 };
@@ -2456,31 +2433,28 @@ locateBtn.onAdd = function () {
 locateBtn.addTo(map);
 
 /* Saat lokasi ditemukan */
-map.on("locationfound", function (e) {
+map.on('locationfound', function(e) {
 
-    // Hapus lama
-    if (userMarker) map.removeLayer(userMarker);
-    if (userCircle) map.removeLayer(userCircle);
+    // Hapus marker lama jika ada
+    if(userMarker) map.removeLayer(userMarker);
+    if(userCircle) map.removeLayer(userCircle);
 
-    // Lingkaran akurasi
     userCircle = L.circle(e.latlng, {
         radius: e.accuracy,
-        color: "#1e90ff",
-        fillColor: "#1e90ff",
+        color: '#ffd700',
+        fillColor: '#ffd700',
         fillOpacity: 0.15
     }).addTo(map);
 
-    // Icon orang
-    userMarker = L.marker(e.latlng, {
-        icon: personIcon
-    }).addTo(map)
-      .bindPopup("🧍 Anda berada di sini")
-      .openPopup();
+    userMarker = L.marker(e.latlng, {icon: personIcon})
+        .addTo(map)
+        .bindPopup("🧍 Anda berada di sini")
+        .openPopup();
 });
 
 /* Jika gagal */
-map.on("locationerror", function (e) {
-    alert("GPS gagal: " + e.message);
+map.on('locationerror', function() {
+    alert("GPS tidak diizinkan atau tidak tersedia.");
 });
             
         // Fungsi untuk menghitung jumlah berdasarkan jenis
@@ -2516,7 +2490,6 @@ map.on("locationerror", function (e) {
             attribution: 'iles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         }).addTo(map);
 
-        
         console.log("CEK FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
 
         if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
