@@ -295,6 +295,8 @@
         
         /* Style untuk popup peta */
 
+    
+
         .leaflet-popup-content-wrapper {
     position: relative;
     background: #000000 !important;
@@ -440,42 +442,10 @@
             border-bottom: none !important;
         }
         
-      @media (max-width: 768px) {
-
-    body {
-        overflow: hidden;
-    }
-
-    .container {
-        flex-direction: column;
-        height: 100vh;
-    }
-
-    /* Sidebar jadi kecil */
-    .sidebar {
-        width: 100%;
-        height: 25%;
-        padding: 0.8rem;
-        overflow-y: auto;
-        border-bottom: 1px solid #333;
-        transition: height 0.3s ease;
-    }
-
-    /* Peta lebih besar */
-    #map {
-        height: 75%;
-        border-radius: 0;
-    }
-
-    /* Scroll lebih smooth */
-    .sidebar::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-        background: #666;
-        border-radius: 4px;
-    }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
             /* Popup Mobile Style */
 @media (max-width: 768px) {
 
@@ -670,49 +640,6 @@ h1:hover {
         0 0 10px rgba(30,144,255,0.7),
         0 0 20px rgba(0,242,254,0.7),
         0 0 30px rgba(0,184,148,0.7);
-}
-/* ========================= */
-/* MOBILE BOTTOM SHEET STYLE */
-/* ========================= */
-
-.mobile-sheet {
-    position: fixed;
-    left: 0;
-    bottom: -100%;
-    width: 100%;
-    height: 65vh;
-    background: #111;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
-    transition: bottom 0.35s ease;
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-}
-
-.mobile-sheet.active {
-    bottom: 0;
-}
-
-.sheet-handle {
-    width: 50px;
-    height: 5px;
-    background: #777;
-    border-radius: 10px;
-    margin: 12px auto;
-}
-
-.sheet-content {
-    padding: 20px;
-    overflow-y: auto;
-    color: #fff;
-}
-
-/* Aktif hanya di mobile */
-@media (min-width: 769px) {
-    .mobile-sheet {
-        display: none;
-    }
 }
 </style>
             <p>“SISTEM INFORMASI PENDATAAN MANAJEMEN PERSETUJUAN BANGUNAN GEDUNG KABUPATEN MAJENE"</p>
@@ -2782,7 +2709,7 @@ if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data/BATAS_ADMINISTRATIF_AR_0.js"></script> </body>
 </html>
-    <!-- MOBILE BOTTOM SHEET -->
+<!-- MOBILE BOTTOM SHEET -->
     <div id="mobile-sheet" class="mobile-sheet">
     <div class="sheet-handle"></div>
     <div id="sheet-content" class="sheet-content"></div>
