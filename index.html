@@ -2323,16 +2323,16 @@
         const map = L.map('map').setView([-3.54, 118.985], 13);
         
         // Base layers
-        const openStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
         
-        const satelliteLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
 
         // Tambahkan peta dasar default
-        openStreetMap.addTo(map);
+        satelliteLayer.addTo(map);
 
         // Layer untuk Batas Administratif (dari file eksternal)
         let batasLayer = null;
@@ -2448,8 +2448,8 @@
 
         // Tambahkan kontrol layer (pilih peta dasar dan overlay)
         L.control.layers({
-            "Peta Standar": openStreetMap,
-            "Peta Satelit": satelliteLayer
+            "Peta Satelit": satelliteLayer,
+            "Peta Standar": openStreetMap
         }, overlayGroups, { collapsed: false }).addTo(map);
 
         // Tampilkan semua marker default
