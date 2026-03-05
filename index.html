@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPAMANDAR-GIS</title>
+    <title>SIPAMANDAR-GIS + POLARUANG</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="gambar/gambar/gambar_1.png">
@@ -647,8 +647,9 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Data Batas Administratif -->
+    <!-- Data Batas Administratif & Pola Ruang -->
     <script src="data/BATAS_ADMINISTRATIF_AR_0.js"></script>
+    <script src="data/POLARUANG_0.js"></script>
     
     <script>
         // Script untuk menghilangkan opening screen setelah loading selesai
@@ -663,7 +664,7 @@
             }, 3000);
         });
 
-        // Data persetujuan bangunan gedung (buildingData - sama persis seperti di index.html asli)
+        // ==================== DATA BANGUNAN LENGKAP 110 ITEM ====================
         const buildingData = [
             {
                 id: 1,
@@ -2316,87 +2317,113 @@
                 kecamatan: "Banggae Timur"  
             }
         ];
+        // ==================== AKHIR DATA BANGUNAN ====================
 
         // Inisialisasi peta
         const map = L.map('map').setView([-3.54, 118.985], 13);
         
-        // Fungsi untuk menghitung jumlah berdasarkan jenis
-        function countByType() {
-            const counts = {
-                "Rumah Tinggal": 0,
-                "Perumahan dan Perdagangan Jasa": 0,
-                "Rumah Kos": 0,
-                "Hunian/Perdagangan & Jasa": 0,
-                "Ruko": 0,
-                "Karantina Hewan": 0,
-                "Perumahan": 0,
-                "Tower Telekomunikasi": 0,
-                "Rumah Makan": 0,
-                "Industri Minuman": 0,
-                "Toko": 0
-            };
-            
-            buildingData.forEach(building => {
-                if (counts.hasOwnProperty(building.type)) {
-                    counts[building.type]++;
-                } else {
-                    counts[building.type] = 1;
-                }
-            });
-            
-            return counts;
-        }
-
-        // Tambahkan tile layer (peta dasar)
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'iles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-        }).addTo(map);
-
-        // Tambahkan layer satelit
+        // Base layers
+        const openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
-        
-        // Tambahkan layer kontrol
-        const baseMaps = {
-            "Peta Standar": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }),
-            "Peta Satelit": satelliteLayer
-        };
-        
-        L.control.layers(baseMaps).addTo(map);
 
-        // Tambahkan marker untuk setiap data bangunan
+        // Tambahkan peta dasar default
+        openStreetMap.addTo(map);
+
+        // Layer untuk Batas Administratif (dari file eksternal)
+        let batasLayer = null;
+        if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
+            batasLayer = L.geoJSON(json_BATAS_ADMINISTRATIF_AR_0, {
+                style: {
+                    color: "rgba(35,169,207,1.0)",
+                    weight: 2,
+                    dashArray: "4.0,2.0",
+                    lineCap: 'square',
+                    lineJoin: 'bevel',
+                    fillOpacity: 0,
+                    opacity: 1
+                },
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties) {
+                        let popupContent = '<table>';
+                        if (feature.properties.Kecamatan) popupContent += `<tr><td><strong>Kecamatan:</strong></td><td>${feature.properties.Kecamatan}</td></tr>`;
+                        if (feature.properties.Kelurahan) popupContent += `<tr><td><strong>Kelurahan/Desa:</strong></td><td>${feature.properties.Kelurahan}</td></tr>`;
+                        if (feature.properties.Kabupaten) popupContent += `<tr><td><strong>Kabupaten:</strong></td><td>${feature.properties.Kabupaten}</td></tr>`;
+                        if (feature.properties.Provinsi) popupContent += `<tr><td><strong>Provinsi:</strong></td><td>${feature.properties.Provinsi}</td></tr>`;
+                        popupContent += '</table>';
+                        layer.bindPopup(popupContent);
+                    }
+                }
+            });
+        } else {
+            console.warn("Data batas administratif tidak ditemukan.");
+        }
+
+        // Layer untuk Pola Ruang (dari file POLARUANG_0.js)
+        let polaRuangLayer = null;
+        if (typeof json_POLARUANG_0 !== "undefined") {
+            function stylePolaRuang(feature) {
+                const name = feature.properties.NAMOBJ;
+                let fillColor = 'rgba(210,117,233,1.0)'; // default
+                if (name === 'Badan Air') fillColor = 'rgba(130,239,217,1.0)';
+                else if (name === 'Badan Jalan') fillColor = 'rgba(238,126,231,1.0)';
+                else if (name === 'Ekosistem Mangrove') fillColor = 'rgba(106,23,230,1.0)';
+                else if (name === 'Hutan Kota') fillColor = 'rgba(200,150,116,1.0)';
+                else if (name === 'Pemakaman') fillColor = 'rgba(231,64,64,1.0)';
+                else if (name && name.includes('Perdagangan dan Jasa')) fillColor = 'rgba(89,89,222,1.0)';
+                else if (name && name.includes('Perumahan')) fillColor = 'rgba(63,198,228,1.0)';
+                else if (name && name.includes('Rumah Kepadatan Rendah')) fillColor = 'rgba(215,126,24,1.0)';
+                else if (name && name.includes('Rumah Kepadatan Sedang')) fillColor = 'rgba(38,112,222,1.0)';
+                else if (name && name.includes('Rumah Kepadatan Tinggi')) fillColor = 'rgba(37,226,37,1.0)';
+                else if (name === 'Sempadan Pantai') fillColor = 'rgba(41,236,93,1.0)';
+                else if (name === 'Sempadan Sungai') fillColor = 'rgba(103,208,33,1.0)';
+                else if (name && name.includes('SPU Pendidikan')) fillColor = 'rgba(83,239,226,1.0)';
+                else if (name && name.includes('SPU Kesehatan')) fillColor = 'rgba(232,15,189,1.0)';
+                else if (name && name.includes('Taman')) fillColor = 'rgba(25,218,51,1.0)';
+                
+                return {
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1,
+                    fillColor: fillColor,
+                    fillOpacity: 0.7,
+                    opacity: 1
+                };
+            }
+
+            polaRuangLayer = L.geoJSON(json_POLARUANG_0, {
+                style: stylePolaRuang,
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties) {
+                        let content = '<table>';
+                        for (let key in feature.properties) {
+                            if (feature.properties[key]) {
+                                content += `<tr><td><strong>${key}:</strong></td><td>${feature.properties[key]}</td></tr>`;
+                            }
+                        }
+                        content += '</table>';
+                        layer.bindPopup(content);
+                    }
+                }
+            });
+        } else {
+            console.warn("Data pola ruang tidak ditemukan.");
+        }
+
+        // Marker untuk bangunan
         const markers = [];
         buildingData.forEach(building => {
-            // Tentukan warna marker berdasarkan status
-            let markerColor;
-            switch(building.status) {
-                case "Disetujui":
-                    markerColor = "green";
-                    break;
-                case "Proses":
-                    markerColor = "orange";
-                    break;
-                case "Ditolak":
-                    markerColor = "red";
-                    break;
-                default:
-                    markerColor = "blue";
-            }
-            
-            // Buat custom icon
+            let markerColor = building.status === "Disetujui" ? "green" : (building.status === "Proses" ? "orange" : "red");
             const customIcon = L.divIcon({
                 className: 'custom-div-icon',
                 html: `<div style="background-color: ${markerColor}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>`,
                 iconSize: [20, 20],
                 iconAnchor: [10, 10]
             });
-            
-            // Tambahkan marker ke peta
             const marker = L.marker([building.lat, building.lng], {icon: customIcon})
-                .addTo(map)
                 .bindPopup(`
                     <div class="info-window">
                         <h3>${building.name}</h3>
@@ -2408,17 +2435,30 @@
                         <p><strong>Lantai:</strong> ${building.floors}</p>
                     </div>
                 `);
-            
-            // Simpan referensi marker dengan data bangunan
             marker.buildingData = building;
             markers.push(marker);
         });
 
-        // Fungsi untuk menampilkan data di sidebar
+        // Grup overlay untuk kontrol layer
+        const overlayGroups = {
+            "Titik Bangunan": L.layerGroup(markers),
+        };
+        if (batasLayer) overlayGroups["Batas Administratif"] = batasLayer;
+        if (polaRuangLayer) overlayGroups["Pola Ruang"] = polaRuangLayer;
+
+        // Tambahkan kontrol layer (pilih peta dasar dan overlay)
+        L.control.layers({
+            "Peta Standar": openStreetMap,
+            "Peta Satelit": satelliteLayer
+        }, overlayGroups, { collapsed: false }).addTo(map);
+
+        // Tampilkan semua marker default
+        markers.forEach(m => m.addTo(map));
+
+        // Fungsi untuk render sidebar
         function renderDataList(data) {
             const dataList = document.getElementById('data-list');
             dataList.innerHTML = '';
-            
             data.forEach(building => {
                 const item = document.createElement('div');
                 item.className = 'data-item';
@@ -2429,175 +2469,69 @@
                     <p><strong>Status:</strong> ${building.status}</p>
                     <p><strong>Tanggal:</strong> ${building.approvalDate}</p>
                 `;
-                
                 item.addEventListener('click', () => {
-                    // Buka popup marker yang sesuai
                     const marker = markers.find(m => m.buildingData.id === building.id);
                     if (marker) {
                         map.setView([building.lat, building.lng], 16);
                         marker.openPopup();
                     }
                 });
-                
                 dataList.appendChild(item);
             });
         }
 
-        // Fungsi untuk mengisi filter dropdown
+        // Fungsi isi filter
         function populateFilters() {
-            const kelurahanFilter = document.getElementById('kelurahan-filter');
-            const kecamatanFilter = document.getElementById('kecamatan-filter');
+            const kelFilter = document.getElementById('kelurahan-filter');
+            const kecFilter = document.getElementById('kecamatan-filter');
             const yearFilter = document.getElementById('year-filter');
             const typeFilter = document.getElementById('type-filter');
             
-            // Dapatkan nilai unik untuk setiap filter
-            let kelurahans = [...new Set(buildingData.map(b => b.kelurahan))];
-            let kecamatans = [...new Set(buildingData.map(b => b.kecamatan))];
-            let years = [...new Set(buildingData.map(b => b.approvalDate.substring(0, 4)))];
+            let kelurahans = [...new Set(buildingData.map(b => b.kelurahan))].sort();
+            let kecamatans = [...new Set(buildingData.map(b => b.kecamatan))].sort();
+            let years = [...new Set(buildingData.map(b => b.approvalDate.substring(0, 4)))].sort();
             
-            // Urutkan secara alfabetis/numerik
-            kelurahans.sort();
-            kecamatans.sort();
-            years.sort((a, b) => a - b);
+            kelurahans.forEach(k => { let o = new Option(k, k); kelFilter.appendChild(o); });
+            kecamatans.forEach(k => { let o = new Option(k, k); kecFilter.appendChild(o); });
+            years.forEach(y => { let o = new Option(y, y); yearFilter.appendChild(o); });
             
-            // Hitung jumlah berdasarkan jenis
-            const typeCounts = countByType();
-            
-            // Isi filter kelurahan
-            kelurahans.forEach(kel => {
-                const option = document.createElement('option');
-                option.value = kel;
-                option.textContent = kel;
-                kelurahanFilter.appendChild(option);
-            });
-            
-            // Isi filter kecamatan
-            kecamatans.forEach(kec => {
-                const option = document.createElement('option');
-                option.value = kec;
-                option.textContent = kec;
-                kecamatanFilter.appendChild(option);
-            });
-            
-            // Isi filter tahun
-            years.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearFilter.appendChild(option);
-            });
-            
-            // Isi filter jenis dengan jumlah data dan urutkan berdasarkan nama jenis
-            const sortedTypes = Object.keys(typeCounts).sort();
-            sortedTypes.forEach(type => {
-                const option = document.createElement('option');
-                option.value = type;
-                option.textContent = `${type} (${typeCounts[type]})`;
-                typeFilter.appendChild(option);
-            });
+            let types = [...new Set(buildingData.map(b => b.type))].sort();
+            types.forEach(t => { let o = new Option(t, t); typeFilter.appendChild(o); });
         }
 
-        // Fungsi untuk memfilter data
         function filterData() {
-            const searchText = document.getElementById('search-input').value.toLowerCase();
-            const kelurahanValue = document.getElementById('kelurahan-filter').value;
-            const kecamatanValue = document.getElementById('kecamatan-filter').value;
-            const statusValue = document.getElementById('status-filter').value;
-            const typeValue = document.getElementById('type-filter').value;
-            const yearValue = document.getElementById('year-filter').value;
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const kel = document.getElementById('kelurahan-filter').value;
+            const kec = document.getElementById('kecamatan-filter').value;
+            const status = document.getElementById('status-filter').value;
+            const type = document.getElementById('type-filter').value;
+            const year = document.getElementById('year-filter').value;
             
-            const filteredData = buildingData.filter(building => {
-                // Filter berdasarkan pencarian teks
-                const matchesSearch = building.name.toLowerCase().includes(searchText) || 
-                                     building.address.toLowerCase().includes(searchText);
-                
-                // Filter berdasarkan kelurahan
-                const matchesKelurahan = !kelurahanValue || building.kelurahan === kelurahanValue;
-                
-                // Filter berdasarkan kecamatan
-                const matchesKecamatan = !kecamatanValue || building.kecamatan === kecamatanValue;
-                
-                // Filter berdasarkan status
-                const matchesStatus = !statusValue || building.status === statusValue;
-                
-                // Filter berdasarkan jenis
-                const matchesType = !typeValue || building.type === typeValue;
-                
-                // Filter berdasarkan tahun
-                const matchesYear = !yearValue || building.approvalDate.startsWith(yearValue);
-                
-                return matchesSearch && matchesKelurahan && matchesKecamatan && matchesStatus && matchesType && matchesYear;
+            const filtered = buildingData.filter(b => {
+                return (b.name.toLowerCase().includes(search) || b.address.toLowerCase().includes(search)) &&
+                       (!kel || b.kelurahan === kel) &&
+                       (!kec || b.kecamatan === kec) &&
+                       (!status || b.status === status) &&
+                       (!type || b.type === type) &&
+                       (!year || b.approvalDate.startsWith(year));
             });
             
-            // Tampilkan data yang difilter
-            renderDataList(filteredData);
+            renderDataList(filtered);
             
-            // Sembunyikan/tampilkan marker berdasarkan filter
-            markers.forEach(marker => {
-                const isVisible = filteredData.some(b => b.id === marker.buildingData.id);
-                if (isVisible) {
-                    map.addLayer(marker);
+            markers.forEach(m => {
+                const visible = filtered.some(b => b.id === m.buildingData.id);
+                if (visible) {
+                    if (!map.hasLayer(m)) m.addTo(map);
                 } else {
-                    map.removeLayer(marker);
+                    if (map.hasLayer(m)) m.remove();
                 }
             });
         }
 
-        // Tambahkan layer batas administratif dari file eksternal
-        console.log("Mencoba memuat data batas administratif...");
-        
-        // Cek apakah data json_BATAS_ADMINISTRATIF_AR_0 tersedia
-        if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
-            console.log("Data batas administratif ditemukan, menambahkan ke peta...");
-            
-            // Tambahkan layer GeoJSON dengan style yang sama seperti di file asli
-            L.geoJSON(json_BATAS_ADMINISTRATIF_AR_0, {
-                style: {
-                    color: "rgba(35,169,207,1.0)",
-                    weight: 2,
-                    dashArray: "4.0,2.0",
-                    lineCap: 'square',
-                    lineJoin: 'bevel',
-                    fillOpacity: 0,
-                    opacity: 1
-                },
-                onEachFeature: function(feature, layer) {
-                    // Tambahkan popup dengan informasi
-                    if (feature.properties) {
-                        let popupContent = '<table>';
-                        if (feature.properties.Kecamatan) {
-                            popupContent += `<tr><td><strong>Kecamatan:</strong></td><td>${feature.properties.Kecamatan}</td></tr>`;
-                        }
-                        if (feature.properties.Kelurahan) {
-                            popupContent += `<tr><td><strong>Kelurahan/Desa:</strong></td><td>${feature.properties.Kelurahan}</td></tr>`;
-                        }
-                        if (feature.properties.Kabupaten) {
-                            popupContent += `<tr><td><strong>Kabupaten:</strong></td><td>${feature.properties.Kabupaten}</td></tr>`;
-                        }
-                        if (feature.properties.Provinsi) {
-                            popupContent += `<tr><td><strong>Provinsi:</strong></td><td>${feature.properties.Provinsi}</td></tr>`;
-                        }
-                        popupContent += '</table>';
-                        layer.bindPopup(popupContent);
-                    }
-                }
-            }).addTo(map);
-            
-            console.log("Layer batas administratif berhasil ditambahkan!");
-        } else {
-            console.log("Data batas administratif tidak ditemukan. Pastikan file BATAS_ADMINISTRATIF_AR_0.js sudah dimuat.");
-            console.log("Variabel json_BATAS_ADMINISTRATIF_AR_0:", typeof json_BATAS_ADMINISTRATIF_AR_0);
-        }
-
-        // Inisialisasi
+        // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Tampilkan semua data awal
             renderDataList(buildingData);
-            
-            // Isi filter dropdown
             populateFilters();
-            
-            // Tambahkan event listener untuk filter
             document.getElementById('search-input').addEventListener('input', filterData);
             document.getElementById('kelurahan-filter').addEventListener('change', filterData);
             document.getElementById('kecamatan-filter').addEventListener('change', filterData);
@@ -2606,17 +2540,18 @@
             document.getElementById('year-filter').addEventListener('change', filterData);
         });
 
-        // Tambahkan legenda
+        // Legenda tambahan
         const legend = L.control({position: 'bottomright'});
         legend.onAdd = function(map) {
             const div = L.DomUtil.create('div', 'legend');
             div.innerHTML = `
-                <h4>Keterangan Status</h4>
+                <h4>Keterangan</h4>
                 <div><span style="background-color: green"></span> Disetujui</div>
-                <div><span style="background-color: orange"></span> Dalam Proses</div>
+                <div><span style="background-color: orange"></span> Proses</div>
                 <div><span style="background-color: red"></span> Ditolak</div>
-                <hr style="border-color: #444; margin: 8px 0;">
-                <div><span style="background-color: rgba(35,169,207,1.0); width: 14px; height: 2px; border-radius: 0;"></span> Batas Administratif</div>
+                <hr style="border-color:#444;margin:8px 0">
+                <div><span style="background:rgba(35,169,207,1.0); width:14px; height:2px; border-radius:0;"></span> Batas Administratif</div>
+                <div><span style="background:rgba(210,117,233,1.0); width:14px; height:14px; border-radius:0;"></span> Pola Ruang</div>
             `;
             return div;
         };
