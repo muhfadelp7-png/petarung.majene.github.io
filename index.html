@@ -15,6 +15,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+
+    /* ============================= */
+/* FIX POPUP MOBILE */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+    .leaflet-popup {
+        width: auto !important;
+        max-width: 85vw !important;
+        margin: 0 auto;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 15px !important;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 12px;
+    }
+
+    .leaflet-popup-content {
+        margin: 5px !important;
+        font-size: 14px;
+    }
+
+    .leaflet-popup-tip-container {
+        display: block;
+    }
+}
         /* Opening Screen Styles */
 #opening-screen {
     position: fixed;
@@ -2480,6 +2509,7 @@ h1:hover {
             // Tambahkan marker ke peta
             const marker = L.marker([building.lat, building.lng], {icon: customIcon})
                 .addTo(map)
+                
                 .bindPopup(`
                     <div class="info-window">
                         <h3>${building.name}</h3>
