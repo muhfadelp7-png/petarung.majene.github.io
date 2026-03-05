@@ -1,2 +1,2 @@
 # petarung.majene.github.io
-WebGIS Peta Sebaran Persetujuan Bangunan Gedung (PBG) Kab. Majene
+“SISTEM INFORMASI PENDATAAN MANAJEMEN PERSETUJUAN BANGUNAN GEDUNG KABUPATEN MAJENE"
