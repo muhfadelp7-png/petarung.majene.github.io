@@ -520,6 +520,16 @@
                 font-size: 0.75rem;
             }
         }
+        .custom-user-icon {
+    font-size: 28px;
+    animation: pulseUser 1.5s infinite;
+}
+
+@keyframes pulseUser {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
     </style>
 </head>
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
@@ -571,7 +581,16 @@ h1 {
     animation: gradientMove 8s ease infinite;
     transition: all 0.4s ease;
 }
+.custom-user-icon {
+    font-size: 28px;
+    animation: pulseUser 1.5s infinite;
+}
 
+@keyframes pulseUser {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
 /* Gradient bergerak */
 @keyframes gradientMove {
     0% { background-position: 0% 50%; }
@@ -2373,23 +2392,46 @@ h1:hover {
 
         // Inisialisasi peta
         console.log("TEST FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
-        const map = L.map('map').setView([-3.54, 118.98], 13);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-
+        const map = L.map('map').setView([-3.54, 118.985], 13);
 
 /* ============================= */
-/* 📍 TOMBOL LOKASI SAYA */
+/* 📍 GPS FIXED VERSION */
 /* ============================= */
 
-const locateBtn = L.control({position: 'topleft'});
+let userMarker = null;
+let userCircle = null;
 
-locateBtn.onAdd = function(map) {
-    const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+/* Icon orang berdiri dengan background bulat */
+const personIcon = L.divIcon({
+    className: "",
+    html: `
+        <div style="
+            background:#1e90ff;
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 0 15px rgba(30,144,255,0.8);
+        ">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M6 22c0-3 3-6 6-6s6 3 6 6"/>
+            </svg>
+        </div>
+    `,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
+});
+
+/* Tombol GPS */
+const locateBtn = L.control({ position: 'topleft' });
+
+locateBtn.onAdd = function () {
+    const div = L.DomUtil.create('div', 'leaflet-bar');
     div.innerHTML = "📍";
-    div.style.backgroundColor = "#2a2a2a";
+    div.style.background = "#2a2a2a";
     div.style.width = "40px";
     div.style.height = "40px";
     div.style.display = "flex";
@@ -2399,26 +2441,69 @@ locateBtn.onAdd = function(map) {
     div.style.fontSize = "20px";
     div.style.borderRadius = "8px";
 
-    div.onclick = function(){
-        map.locate({setView: true, maxZoom: 16});
-    }
+    L.DomEvent.disableClickPropagation(div);
 
+    div.onclick = function () {
+        map.locate({
+            setView: true,
+            maxZoom: 17,
+            enableHighAccuracy: true
+        });
+    };
+    div.onclick = function () {
+        
+    map.locate({
+        setView: true,
+        maxZoom: 17,
+        enableHighAccuracy: true,
+        timeout: 10000
+    });
+};
+map.on("click", function(e){
+    L.circle(e.latlng, {radius: 100}).addTo(map);
+});
     return div;
 };
 
 locateBtn.addTo(map);
 
-map.on('locationfound', function(e) {
-    L.circle(e.latlng, {
-        radius: e.accuracy,
-        color: '#ffd700',
-        fillColor: '#ffd700',
-        fillOpacity: 0.2
-    }).addTo(map);
+/* Saat lokasi ditemukan */
+map.on("moveend", function(){
+    console.log("MAP BERGERAK NORMAL");
+});
+map.on("locationfound", function (e) {
 
-    L.marker(e.latlng).addTo(map)
-        .bindPopup("📍 Lokasi Anda")
-        .openPopup();
+    map.stopLocate();
+
+    if (userMarker) map.removeLayer(userMarker);
+    if (userCircle) map.removeLayer(userCircle);
+
+    userCircle = L.circle(e.latlng, {
+        radius: e.accuracy,
+        color: "#1e90ff",
+        fillColor: "#1e90ff",
+        fillOpacity: 0.25,
+        weight: 2
+    });
+
+    userMarker = L.marker(e.latlng, {
+        icon: personIcon
+    }).bindPopup("Anda berada di sini");
+
+    // 🔥 TAMBAH KE MAP TERAKHIR
+    userCircle.addTo(map);
+    userMarker.addTo(map).openPopup();
+
+    // 🔥 Pakai flyTo, bukan setView
+    map.flyTo(e.latlng, 17, {
+        animate: true,
+        duration: 1.5
+    });
+});
+
+/* Jika gagal */
+map.on("locationerror", function (e) {
+    alert("GPS gagal: " + e.message);
 });
             
         // Fungsi untuk menghitung jumlah berdasarkan jenis
@@ -2454,6 +2539,7 @@ map.on('locationfound', function(e) {
             attribution: 'iles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         }).addTo(map);
 
+        
         console.log("CEK FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
 
         if (typeof json_BATAS_ADMINISTRATIF_AR_0 !== "undefined") {
