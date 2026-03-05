@@ -294,9 +294,6 @@
 }
         
         /* Style untuk popup peta */
-
-    
-
         .leaflet-popup-content-wrapper {
     position: relative;
     background: #000000 !important;
@@ -2376,7 +2373,53 @@ h1:hover {
 
         // Inisialisasi peta
         console.log("TEST FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
-        const map = L.map('map').setView([-3.54, 118.985], 13);
+        const map = L.map('map').setView([-3.54, 118.98], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+
+/* ============================= */
+/* 📍 TOMBOL LOKASI SAYA */
+/* ============================= */
+
+const locateBtn = L.control({position: 'topleft'});
+
+locateBtn.onAdd = function(map) {
+    const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+    div.innerHTML = "📍";
+    div.style.backgroundColor = "#2a2a2a";
+    div.style.width = "40px";
+    div.style.height = "40px";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.justifyContent = "center";
+    div.style.cursor = "pointer";
+    div.style.fontSize = "20px";
+    div.style.borderRadius = "8px";
+
+    div.onclick = function(){
+        map.locate({setView: true, maxZoom: 16});
+    }
+
+    return div;
+};
+
+locateBtn.addTo(map);
+
+map.on('locationfound', function(e) {
+    L.circle(e.latlng, {
+        radius: e.accuracy,
+        color: '#ffd700',
+        fillColor: '#ffd700',
+        fillOpacity: 0.2
+    }).addTo(map);
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("📍 Lokasi Anda")
+        .openPopup();
+});
             
         // Fungsi untuk menghitung jumlah berdasarkan jenis
         function countByType() {
