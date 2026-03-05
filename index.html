@@ -520,16 +520,6 @@
                 font-size: 0.75rem;
             }
         }
-        .custom-user-icon {
-    font-size: 28px;
-    animation: pulseUser 1.5s infinite;
-}
-
-@keyframes pulseUser {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
     </style>
 </head>
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
@@ -581,16 +571,7 @@ h1 {
     animation: gradientMove 8s ease infinite;
     transition: all 0.4s ease;
 }
-.custom-user-icon {
-    font-size: 28px;
-    animation: pulseUser 1.5s infinite;
-}
 
-@keyframes pulseUser {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
 /* Gradient bergerak */
 @keyframes gradientMove {
     0% { background-position: 0% 50%; }
@@ -2393,69 +2374,6 @@ h1:hover {
         // Inisialisasi peta
         console.log("TEST FILE:", typeof json_BATAS_ADMINISTRATIF_AR_0);
         const map = L.map('map').setView([-3.54, 118.985], 13);
-
-        /* ============================= */
-/* 📍 GPS DENGAN ICON ORANG */
-/* ============================= */
-
-let userMarker;
-let userCircle;
-
-const personIcon = L.divIcon({
-    className: "custom-user-icon",
-    html: "🧍",
-    iconSize: [30, 30],
-    iconAnchor: [15, 30]
-});
-
-const locateBtn = L.control({position: 'topleft'});
-
-locateBtn.onAdd = function(map) {
-    const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-    div.innerHTML = "📍";
-    div.style.backgroundColor = "#2a2a2a";
-    div.style.width = "40px";
-    div.style.height = "40px";
-    div.style.display = "flex";
-    div.style.alignItems = "center";
-    div.style.justifyContent = "center";
-    div.style.cursor = "pointer";
-    div.style.fontSize = "20px";
-    div.style.borderRadius = "8px";
-
-    div.onclick = function(){
-        map.locate({setView: true, maxZoom: 17});
-    }
-
-    return div;
-};
-
-locateBtn.addTo(map);
-
-/* Saat lokasi ditemukan */
-map.on('locationfound', function(e) {
-
-    // Hapus marker lama jika ada
-    if(userMarker) map.removeLayer(userMarker);
-    if(userCircle) map.removeLayer(userCircle);
-
-    userCircle = L.circle(e.latlng, {
-        radius: e.accuracy,
-        color: '#ffd700',
-        fillColor: '#ffd700',
-        fillOpacity: 0.15
-    }).addTo(map);
-
-    userMarker = L.marker(e.latlng, {icon: personIcon})
-        .addTo(map)
-        .bindPopup("🧍 Anda berada di sini")
-        .openPopup();
-});
-
-/* Jika gagal */
-map.on('locationerror', function() {
-    alert("GPS tidak diizinkan atau tidak tersedia.");
-});
             
         // Fungsi untuk menghitung jumlah berdasarkan jenis
         function countByType() {
