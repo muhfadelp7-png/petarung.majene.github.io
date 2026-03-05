@@ -11,6 +11,9 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
+    <!-- Leaflet Rotated Marker Plugin untuk kompas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-rotatedmarker@0.2.0/leaflet.rotatedMarker.css" />
+    
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -446,6 +449,63 @@
     .leaflet-control-zoom a:hover {
         background-color: #5c500e !important;
     }
+
+    /* GPS Control Button */
+    .gps-control {
+        background-color: #2a2a2a;
+        border-radius: 6px;
+        border: 1px solid #444;
+        margin-bottom: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    
+    .gps-control a {
+        display: block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        color: #e0e0e0;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .gps-control a:hover {
+        background-color: #5c500e;
+        border-radius: 6px;
+    }
+    
+    .gps-control.active a {
+        background-color: #bdc70a;
+        color: #000;
+    }
+    
+    /* Status GPS */
+    .gps-status {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        z-index: 1000;
+        border: 1px solid #bdc70a;
+        display: none;
+        backdrop-filter: blur(5px);
+    }
+    
+    .gps-status.active {
+        display: block;
+    }
+    
+    .gps-status .accuracy {
+        color: #bdc70a;
+        font-weight: bold;
+    }
     
     /* ========== MOBILE STYLES ========== */
     @media (max-width: 768px) {
@@ -505,6 +565,14 @@
         
         .leaflet-control-zoom {
             margin-top: 60px !important;
+        }
+        
+        /* GPS Control di mobile */
+        .gps-control a {
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            font-size: 18px;
         }
         
         /* Legend di kiri bawah untuk mobile */
@@ -593,6 +661,13 @@
             line-height: 28px;
             font-size: 18px;
         }
+        
+        .gps-status {
+            bottom: 48%;
+            right: 10px;
+            font-size: 10px;
+            padding: 4px 8px;
+        }
     }
     </style>
 </head>
@@ -618,6 +693,13 @@
             <img src="gambar/gambar/gambar_3.png" alt="Logo S" class="logo">
         </div>
     </header>
+    
+    <!-- Status GPS -->
+    <div id="gps-status" class="gps-status">
+        <span>📍 GPS: </span>
+        <span id="gps-coords">Mencari...</span>
+        <span> | Akurasi: <span id="gps-accuracy" class="accuracy">0</span> m</span>
+    </div>
     
     <!-- Main Container -->
     <div class="container">
@@ -657,6 +739,9 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Rotated Marker Plugin -->
+    <script src="https://unpkg.com/leaflet-rotatedmarker@0.2.0/leaflet.rotatedMarker.js"></script>
     
     <!-- Data Batas Administratif & Pola Ruang -->
     <script src="data/BATAS_ADMINISTRATIF_AR_0.js"></script>
@@ -2883,6 +2968,266 @@
         // Tampilkan semua marker
         markers.forEach(m => m.addTo(map));
 
+        // ========== FITUR GPS OTOMATIS & LIVE TRACKING ==========
+        let userMarker = null;
+        let userAccuracyCircle = null;
+        let watchId = null;
+        let gpsActive = false;
+        let lastPosition = null;
+        let positionHistory = [];
+        
+        // Buat custom icon untuk user location
+        const userIcon = L.divIcon({
+            className: 'custom-user-icon',
+            html: `<div style="background:#4285F4; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow: 0 0 10px rgba(66,133,244,0.8);"></div>`,
+            iconSize: [22,22],
+            iconAnchor: [11,11]
+        });
+        
+        // Fungsi untuk menghitung jarak antara dua koordinat (dalam meter)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Radius bumi dalam meter
+            const φ1 = lat1 * Math.PI/180;
+            const φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180;
+            const Δλ = (lon2-lon1) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return R * c;
+        }
+        
+        // Fungsi untuk mengupdate tampilan GPS
+        function updateGPSStatus(position) {
+            const gpsStatus = document.getElementById('gps-status');
+            const gpsCoords = document.getElementById('gps-coords');
+            const gpsAccuracy = document.getElementById('gps-accuracy');
+            
+            if (position) {
+                gpsStatus.classList.add('active');
+                gpsCoords.textContent = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                gpsAccuracy.textContent = position.coords.accuracy.toFixed(1);
+                
+                // Update warna akurasi
+                if (position.coords.accuracy < 20) {
+                    gpsAccuracy.style.color = '#00ff00';
+                } else if (position.coords.accuracy < 50) {
+                    gpsAccuracy.style.color = '#ffff00';
+                } else {
+                    gpsAccuracy.style.color = '#ff0000';
+                }
+            } else {
+                gpsStatus.classList.remove('active');
+            }
+        }
+        
+        // Fungsi untuk menghitung heading berdasarkan pergerakan
+        function calculateHeading(oldPos, newPos) {
+            if (!oldPos) return 0;
+            
+            const lat1 = oldPos.coords.latitude * Math.PI/180;
+            const lat2 = newPos.coords.latitude * Math.PI/180;
+            const lon1 = oldPos.coords.longitude * Math.PI/180;
+            const lon2 = newPos.coords.longitude * Math.PI/180;
+            
+            const y = Math.sin(lon2 - lon1) * Math.cos(lat2);
+            const x = Math.cos(lat1) * Math.sin(lat2) -
+                     Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+            
+            let heading = Math.atan2(y, x) * 180/Math.PI;
+            heading = (heading + 360) % 360; // Konversi ke 0-360 derajat
+            
+            return heading;
+        }
+        
+        // Fungsi success GPS
+        function onLocationFound(e) {
+            const radius = e.accuracy;
+            const latlng = e.latlng;
+            
+            // Update status
+            updateGPSStatus(e);
+            
+            // Simpan posisi terakhir
+            lastPosition = e;
+            
+            // Tambahkan ke history (maks 50 titik)
+            positionHistory.push({
+                lat: latlng.lat,
+                lng: latlng.lng,
+                timestamp: Date.now()
+            });
+            if (positionHistory.length > 50) {
+                positionHistory.shift();
+            }
+            
+            // Hitung heading jika ada pergerakan
+            let heading = 0;
+            if (positionHistory.length > 1) {
+                const oldPos = {
+                    coords: {
+                        latitude: positionHistory[positionHistory.length-2].lat,
+                        longitude: positionHistory[positionHistory.length-2].lng
+                    }
+                };
+                heading = calculateHeading(oldPos, e);
+            }
+            
+            // Hapus marker lama jika ada
+            if (userMarker) {
+                map.removeLayer(userMarker);
+            }
+            if (userAccuracyCircle) {
+                map.removeLayer(userAccuracyCircle);
+            }
+            
+            // Buat lingkaran akurasi
+            userAccuracyCircle = L.circle(latlng, {
+                radius: radius,
+                color: '#4285F4',
+                weight: 1,
+                fillColor: '#4285F4',
+                fillOpacity: 0.15,
+                opacity: 0.5
+            }).addTo(map);
+            
+            // Buat marker baru dengan arah (heading)
+            const arrowIcon = L.divIcon({
+                className: 'gps-direction-icon',
+                html: `<div style="transform: rotate(${heading}deg);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="8" fill="#4285F4" stroke="white" stroke-width="2"/>
+                            <path d="M12 4L12 10M12 4L9 7M12 4L15 7" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                       </div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+            
+            userMarker = L.marker(latlng, { icon: arrowIcon }).addTo(map)
+                .bindPopup(`
+                    <div class="info-window">
+                        <h3>Lokasi Anda Saat Ini</h3>
+                        <p><strong>Latitude:</strong> ${latlng.lat.toFixed(6)}</p>
+                        <p><strong>Longitude:</strong> ${latlng.lng.toFixed(6)}</p>
+                        <p><strong>Akurasi:</strong> ±${radius.toFixed(1)} meter</p>
+                        <p><strong>Heading:</strong> ${heading.toFixed(1)}°</p>
+                        <p><strong>Kecepatan:</strong> ${e.speed ? e.speed.toFixed(1) : '0'} m/s</p>
+                        <p><strong>Update:</strong> ${new Date().toLocaleTimeString()}</p>
+                    </div>
+                `);
+            
+            // Jika GPS aktif dan ini pertama kali, pindahkan peta ke lokasi user
+            if (gpsActive && positionHistory.length === 1) {
+                map.setView(latlng, 16);
+            }
+        }
+        
+        // Fungsi error GPS
+        function onLocationError(e) {
+            alert(`Gagal mendapatkan lokasi: ${e.message}`);
+            toggleGPS(false);
+        }
+        
+        // Fungsi toggle GPS
+        function toggleGPS(active) {
+            const gpsButton = document.getElementById('gps-button');
+            gpsActive = active;
+            
+            if (active) {
+                // Mulai tracking
+                if (navigator.geolocation) {
+                    gpsButton.innerHTML = '📍';
+                    gpsButton.parentElement.classList.add('active');
+                    
+                    // Options: high accuracy, update setiap 3 detik atau setiap 5 meter pergerakan
+                    const options = {
+                        enableHighAccuracy: true,
+                        maximumAge: 0,
+                        timeout: 10000,
+                        maximumWait: 3000
+                    };
+                    
+                    // Watch position untuk live tracking
+                    watchId = navigator.geolocation.watchPosition(
+                        onLocationFound, 
+                        onLocationError, 
+                        options
+                    );
+                    
+                    // Dapatkan posisi sekali untuk memulai
+                    navigator.geolocation.getCurrentPosition(onLocationFound, onLocationError, options);
+                } else {
+                    alert('Browser tidak mendukung GPS');
+                    toggleGPS(false);
+                }
+            } else {
+                // Hentikan tracking
+                if (watchId !== null) {
+                    navigator.geolocation.clearWatch(watchId);
+                    watchId = null;
+                }
+                
+                // Hapus marker
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                    userMarker = null;
+                }
+                if (userAccuracyCircle) {
+                    map.removeLayer(userAccuracyCircle);
+                    userAccuracyCircle = null;
+                }
+                
+                // Update UI
+                gpsButton.innerHTML = '📍';
+                gpsButton.parentElement.classList.remove('active');
+                updateGPSStatus(null);
+                
+                // Reset history
+                positionHistory = [];
+                lastPosition = null;
+            }
+        }
+        
+        // Tambahkan kontrol GPS ke peta
+        const gpsControl = L.control({ position: 'topleft' });
+        gpsControl.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'gps-control');
+            div.innerHTML = '<a href="#" id="gps-button" title="Aktifkan GPS & Live Tracking">📍</a>';
+            
+            div.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleGPS(!gpsActive);
+            };
+            
+            return div;
+        };
+        gpsControl.addTo(map);
+        
+        // Tambahkan tombol "Kembali ke lokasi saya" jika GPS aktif
+        const recenterControl = L.control({ position: 'topleft' });
+        recenterControl.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'gps-control');
+            div.innerHTML = '<a href="#" id="recenter-button" title="Kembali ke lokasi saya">⏺️</a>';
+            
+            div.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (userMarker) {
+                    map.setView(userMarker.getLatLng(), 16);
+                } else {
+                    alert('GPS belum aktif. Aktifkan GPS terlebih dahulu.');
+                }
+            };
+            
+            return div;
+        };
+        recenterControl.addTo(map);
+
         // ========== LEGEND KIRI BAWAH ==========
         const legend = L.control({ position: 'bottomleft' });
         legend.onAdd = () => {
@@ -2892,6 +3237,8 @@
                 <div><span style="background:green"></span> Disetujui</div>
                 <div><span style="background:orange"></span> Proses</div>
                 <div><span style="background:red"></span> Ditolak</div>
+                <hr>
+                <div><span style="background:#4285F4; border-radius:50%;"></span> Lokasi Anda</div>
                 <hr>
                 <div><span style="background:rgba(35,169,207,1); width:14px; height:2px; border-radius:0;"></span> Batas Adm</div>
                 <div><span style="background:rgba(210,117,233,1); border-radius:0;"></span> Pola Ruang</div>
@@ -2967,6 +3314,11 @@
             document.getElementById('status-filter').addEventListener('change', filterData);
             document.getElementById('type-filter').addEventListener('change', filterData);
             document.getElementById('year-filter').addEventListener('change', filterData);
+            
+            // Cek dukungan GPS saat halaman dimuat
+            if (!navigator.geolocation) {
+                console.warn('Browser tidak mendukung GPS');
+            }
         });
     </script>
 </body>
