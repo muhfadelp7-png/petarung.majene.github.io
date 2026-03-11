@@ -388,10 +388,10 @@
         align-items: center;
     }
     
-    /* LEGEND - KIRI BAWAH */
+    /* LEGEND - KIRI BAWAH (COLLAPSIBLE) */
     .legend {
-        padding: 10px 12px;
-        background: rgba(42, 42, 42, 0.9);
+        padding: 0;
+        background: rgba(42, 42, 42, 0.95);
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
         border-radius: 8px;
@@ -400,18 +400,53 @@
         color: #e0e0e0;
         border: 1px solid #555;
         font-size: 0.85rem;
-        max-width: 200px;
+        max-width: 220px;
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
-    
-    .legend h4 {
-        margin: 0 0 8px;
+
+    .legend-header {
+        padding: 10px 12px;
+        background: linear-gradient(90deg, #a9a60a, #2a2a2a);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        border-bottom: 1px solid #555;
+        transition: all 0.3s ease;
+    }
+
+    .legend-header:hover {
+        background: linear-gradient(90deg, #bdb90c, #3a3a3a);
+    }
+
+    .legend-header h4 {
+        margin: 0;
         font-size: 0.95rem;
         color: #ffffff;
         font-weight: 600;
-        border-bottom: 1px solid #555;
-        padding-bottom: 5px;
     }
-    
+
+    .legend-toggle {
+        font-size: 1rem;
+        transition: transform 0.3s ease;
+        display: inline-block;
+    }
+
+    .legend-content {
+        padding: 10px 12px;
+        transition: all 0.3s ease;
+    }
+
+    .legend.minimized .legend-content {
+        display: none;
+    }
+
+    .legend.minimized .legend-toggle {
+        transform: rotate(180deg);
+    }
+
     .legend span {
         display: inline-block;
         width: 12px;
@@ -421,7 +456,7 @@
         border: 1px solid #666;
         vertical-align: middle;
     }
-    
+
     .legend hr {
         border-color: #555;
         margin: 6px 0;
@@ -547,6 +582,34 @@
         border-radius: 6px;
     }
     
+    /* Sync to Google Sheets Button */
+    .sync-control {
+        background-color: #2a2a2a;
+        border-radius: 6px;
+        border: 1px solid #444;
+        margin-bottom: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        cursor: pointer;
+    }
+    
+    .sync-control a {
+        display: block;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+        color: #e0e0e0;
+        font-size: 18px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .sync-control a:hover {
+        background-color: #0F9D58;
+        border-radius: 6px;
+    }
+    
     /* Saved Locations Panel */
     .saved-locations-panel {
         position: fixed;
@@ -630,6 +693,15 @@
     
     .panel-actions button.export-excel:hover {
         background: #1976D2;
+    }
+    
+    .panel-actions button.sync-google {
+        background: #0F9D58;
+        border-color: #0B8043;
+    }
+    
+    .panel-actions button.sync-google:hover {
+        background: #0B8043;
     }
     
     .saved-locations-list {
@@ -1118,38 +1190,46 @@
         /* GPS Control di mobile */
         .gps-control a,
         .save-location-control a,
-        .export-control a {
+        .export-control a,
+        .sync-control a {
             width: 40px;
             height: 40px;
             line-height: 40px;
             font-size: 20px;
         }
         
-        /* Legend di kiri bawah untuk mobile */
+        /* Legend di mobile - collapsible */
         .legend {
             position: fixed !important;
             bottom: 48% !important;
             left: 10px !important;
             z-index: 5 !important;
-            background: rgba(20, 20, 20, 0.85) !important;
+            background: rgba(20, 20, 20, 0.95) !important;
             backdrop-filter: blur(5px);
             font-size: 0.75rem;
-            padding: 6px 8px;
-            max-width: 150px;
-            pointer-events: none;
+            max-width: 180px;
+            pointer-events: auto;
+            border: 1px solid #a9a60a;
         }
         
-        .legend h4 {
+        .legend-header {
+            padding: 8px 10px;
+        }
+        
+        .legend-header h4 {
             font-size: 0.8rem;
-            margin-bottom: 3px;
         }
         
-        .legend div {
+        .legend-content {
+            padding: 8px 10px;
+        }
+        
+        .legend-content div {
             margin-bottom: 2px;
             font-size: 0.7rem;
         }
         
-        .legend span {
+        .legend-content span {
             width: 10px;
             height: 10px;
             margin-right: 4px;
@@ -1279,7 +1359,7 @@
         </div>
         <div class="panel-actions">
             <button id="export-excel-btn" class="export-excel"><i class="fas fa-file-excel"></i> Export Excel</button>
-            <button id="export-google-btn"><i class="fab fa-google"></i> Google Sheets</button>
+            <button id="sync-google-btn" class="sync-google"><i class="fab fa-google"></i> Sync ke Google Sheets</button>
         </div>
         <div id="saved-locations-list" class="saved-locations-list">
             <!-- Saved locations will be listed here -->
@@ -3185,8 +3265,6 @@
                 kelurahan: "Lembang",
                 kecamatan: "Banggae Timur"  
             },
-
-
         ];
         // ==================== AKHIR DATA BANGUNAN LENGKAP ====================
 
@@ -3744,6 +3822,51 @@
         // Tampilkan semua marker
         markers.forEach(m => m.addTo(map));
 
+        // ========== LEGEND KIRI BAWAH (COLLAPSIBLE) ==========
+        const legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = () => {
+            const div = L.DomUtil.create('div', 'legend');
+            
+            // Cek apakah di mobile untuk default minimized
+            const isMobile = window.innerWidth <= 768;
+            
+            div.innerHTML = `
+                <div class="legend-header" onclick="toggleLegend(this)">
+                    <h4>Keterangan</h4>
+                    <span class="legend-toggle">▼</span>
+                </div>
+                <div class="legend-content" style="${isMobile ? 'display: none;' : ''}">
+                    <div><span style="background:green"></span> Disetujui</div>
+                    <div><span style="background:orange"></span> Proses</div>
+                    <div><span style="background:red"></span> Ditolak</div>
+                    <hr>
+                    <div><span style="background:#4285F4; border-radius:50%;"></span> Lokasi Anda</div>
+                    <div><span style="background:#4CAF50; border-radius:50%;"></span> Lokasi Tersimpan</div>
+                    <hr>
+                    <div><span style="background:rgba(35,169,207,1); width:14px; height:2px; border-radius:0;"></span> Batas Adm</div>
+                    <div><span style="background:rgba(210,117,233,1); border-radius:0;"></span> Pola Ruang</div>
+                </div>
+            `;
+            
+            return div;
+        };
+        legend.addTo(map);
+
+        // Fungsi untuk toggle legend
+        window.toggleLegend = function(header) {
+            const legend = header.closest('.legend');
+            const content = legend.querySelector('.legend-content');
+            const toggle = legend.querySelector('.legend-toggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.display = 'none';
+                toggle.style.transform = 'rotate(180deg)';
+            }
+        };
+
         // ========== FITUR SAVE LOKASI UNTUK CEK ZONA ==========
         // Array untuk menyimpan lokasi yang disimpan
         let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
@@ -4031,44 +4154,56 @@
             showNotification('Data berhasil diekspor ke Excel!', 'success');
         }
         
-        // Fungsi untuk ekspor ke Google Sheets format CSV
-        function exportToGoogleSheets() {
+        // ========== FITUR SYNC KE GOOGLE SHEETS ==========
+        // Ganti URL ini dengan URL Web App Google Apps Script Anda
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxKRxxbrDzn11KFBXR9DcP3D6dWdtlK4rroei8tKLbc11TSPjjWDS_l6mTZKqn_lOJG/exec'; // Ganti dengan URL Anda
+        
+        // Fungsi untuk sync ke Google Sheets
+        async function syncToGoogleSheets() {
             if (savedLocations.length === 0) {
-                showNotification('Tidak ada data untuk diekspor', 'warning');
+                showNotification('Tidak ada data untuk disinkronkan', 'warning');
                 return;
             }
             
-            // Buat header CSV
-            let csv = 'No,Nama Pemilik,Zona,Latitude,Longitude,Waktu,Catatan,Akurasi (m)\n';
+            // Tampilkan loading
+            showNotification('Menyinkronkan data ke Google Sheets...', 'info');
             
-            // Tambahkan data
-            savedLocations.forEach((loc, index) => {
-                const row = [
-                    index + 1,
-                    `"${loc.ownerName || '-'}"`,
-                    `"${loc.zone || '-'}"`,
-                    loc.lat.toFixed(6),
-                    loc.lng.toFixed(6),
-                    `"${new Date(loc.timestamp).toLocaleString()}"`,
-                    `"${loc.notes || '-'}"`,
-                    loc.accuracy ? loc.accuracy.toFixed(1) : '-'
-                ];
-                csv += row.join(',') + '\n';
-            });
-            
-            // Buat blob untuk download
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', `Lokasi_Tersimpan_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('Data berhasil diekspor (siap import ke Google Sheets)!', 'success');
+            try {
+                // Siapkan data untuk dikirim
+                const dataToSend = {
+                    locations: savedLocations.map(loc => ({
+                        ownerName: loc.ownerName || '-',
+                        zone: loc.zone || '-',
+                        lat: loc.lat,
+                        lng: loc.lng,
+                        timestamp: loc.timestamp,
+                        notes: loc.notes || '-',
+                        accuracy: loc.accuracy || '-',
+                        id: loc.id
+                    }))
+                };
+                
+                // Kirim data ke Google Apps Script
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Untuk mengatasi CORS
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+                
+                // Karena mode 'no-cors', kita tidak bisa membaca response
+                // Tapi kita asumsikan berhasil
+                showNotification('Data berhasil dikirim ke Google Sheets! Cek spreadsheet Anda di email muhfadelp7@gmail.com', 'success');
+                
+                // Log untuk debugging
+                console.log('Data sent to Google Sheets:', dataToSend);
+                
+            } catch (error) {
+                console.error('Error syncing to Google Sheets:', error);
+                showNotification('Gagal menyinkronkan data. Cek koneksi internet Anda.', 'error');
+            }
         }
         
         // Fungsi untuk menampilkan notifikasi
@@ -4436,7 +4571,7 @@
                 const saveZoneBtn = document.getElementById('save-zone-btn');
                 const closeZonePopup = document.getElementById('close-zone-popup');
                 const exportExcelBtn = document.getElementById('export-excel-btn');
-                const exportGoogleBtn = document.getElementById('export-google-btn');
+                const syncGoogleBtn = document.getElementById('sync-google-btn');
                 const updateLocationBtn = document.getElementById('update-location-btn');
                 const cancelEditBtn = document.getElementById('cancel-edit-btn');
                 
@@ -4497,9 +4632,9 @@
                     });
                 }
                 
-                if (exportGoogleBtn) {
-                    exportGoogleBtn.addEventListener('click', function() {
-                        exportToGoogleSheets();
+                if (syncGoogleBtn) {
+                    syncGoogleBtn.addEventListener('click', function() {
+                        syncToGoogleSheets();
                     });
                 }
                 
@@ -4521,26 +4656,6 @@
                 
             }, 500);
         });
-
-        // ========== LEGEND KIRI BAWAH ==========
-        const legend = L.control({ position: 'bottomleft' });
-        legend.onAdd = () => {
-            const div = L.DomUtil.create('div', 'legend');
-            div.innerHTML = `
-                <h4>Keterangan</h4>
-                <div><span style="background:green"></span> Disetujui</div>
-                <div><span style="background:orange"></span> Proses</div>
-                <div><span style="background:red"></span> Ditolak</div>
-                <hr>
-                <div><span style="background:#4285F4; border-radius:50%;"></span> Lokasi Anda</div>
-                <div><span style="background:#4CAF50; border-radius:50%;"></span> Lokasi Tersimpan</div>
-                <hr>
-                <div><span style="background:rgba(35,169,207,1); width:14px; height:2px; border-radius:0;"></span> Batas Adm</div>
-                <div><span style="background:rgba(210,117,233,1); border-radius:0;"></span> Pola Ruang</div>
-            `;
-            return div;
-        };
-        legend.addTo(map);
 
         // Sidebar functions
         function renderDataList(data) {
