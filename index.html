@@ -14,9 +14,6 @@
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
     /* ============================= */
     /* FIX POPUP MOBILE */
@@ -483,239 +480,6 @@
         color: #000;
     }
     
-    /* Save Location Button */
-    .save-location-control {
-        background-color: #2a2a2a;
-        border-radius: 6px;
-        border: 1px solid #444;
-        margin-bottom: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        cursor: pointer;
-    }
-    
-    .save-location-control a {
-        display: block;
-        width: 34px;
-        height: 34px;
-        line-height: 34px;
-        text-align: center;
-        color: #e0e0e0;
-        font-size: 18px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    .save-location-control a:hover {
-        background-color: #5c500e;
-        border-radius: 6px;
-    }
-    
-    .save-location-control.active a {
-        background-color: #4CAF50;
-        color: #000;
-    }
-    
-    /* Saved Locations Panel */
-    .saved-locations-panel {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 300px;
-        max-height: 400px;
-        background: rgba(30, 30, 30, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        border: 1px solid #444;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-        z-index: 1000;
-        display: none;
-        flex-direction: column;
-        overflow: hidden;
-    }
-    
-    .saved-locations-panel.active {
-        display: flex;
-    }
-    
-    .panel-header {
-        padding: 12px 15px;
-        background: linear-gradient(90deg, #a9a60a, #2a2a2a);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #555;
-    }
-    
-    .panel-header h3 {
-        color: #fff;
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0;
-    }
-    
-    .panel-header button {
-        background: none;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        font-size: 1.1rem;
-        opacity: 0.8;
-        transition: opacity 0.2s;
-    }
-    
-    .panel-header button:hover {
-        opacity: 1;
-    }
-    
-    .saved-locations-list {
-        padding: 10px;
-        overflow-y: auto;
-        max-height: 300px;
-    }
-    
-    .saved-location-item {
-        background: #2a2a2a;
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 8px;
-        border-left: 4px solid #a9a60a;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    .saved-location-item:hover {
-        background: #3a3a3a;
-        transform: translateX(3px);
-    }
-    
-    .saved-location-item .location-name {
-        font-weight: 600;
-        color: #ffd700;
-        font-size: 0.9rem;
-        margin-bottom: 5px;
-    }
-    
-    .saved-location-item .location-zone {
-        font-size: 0.8rem;
-        color: #4CAF50;
-        margin-bottom: 3px;
-    }
-    
-    .saved-location-item .location-coords {
-        font-size: 0.7rem;
-        color: #aaa;
-    }
-    
-    .saved-location-item .location-time {
-        font-size: 0.65rem;
-        color: #888;
-        margin-top: 5px;
-        text-align: right;
-    }
-    
-    .saved-location-item .delete-location {
-        float: right;
-        color: #ff6b6b;
-        cursor: pointer;
-        font-size: 0.8rem;
-        padding: 2px 5px;
-        border-radius: 3px;
-        transition: all 0.2s;
-    }
-    
-    .saved-location-item .delete-location:hover {
-        background: rgba(255, 107, 107, 0.2);
-    }
-    
-    /* Zone Info Popup */
-    .zone-info-popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.95);
-        border: 2px solid #a9a60a;
-        border-radius: 15px;
-        padding: 20px;
-        z-index: 10000;
-        max-width: 350px;
-        width: 90%;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        animation: popupFadeIn 0.3s ease;
-    }
-    
-    @keyframes popupFadeIn {
-        from { opacity: 0; transform: translate(-50%, -60%); }
-        to { opacity: 1; transform: translate(-50%, -50%); }
-    }
-    
-    .zone-info-popup h4 {
-        color: #ffd700;
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #333;
-        padding-bottom: 8px;
-    }
-    
-    .zone-info-popup .zone-name {
-        font-size: 1.1rem;
-        color: #4CAF50;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-    
-    .zone-info-popup .zone-detail {
-        background: #1a1a1a;
-        padding: 12px;
-        border-radius: 8px;
-        margin: 10px 0;
-        font-size: 0.9rem;
-    }
-    
-    .zone-info-popup .zone-detail p {
-        margin: 5px 0;
-    }
-    
-    .zone-info-popup .zone-detail i {
-        color: #a9a60a;
-        width: 20px;
-    }
-    
-    .zone-info-popup .button-group {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-    
-    .zone-info-popup button {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-    
-    .zone-info-popup .btn-save {
-        background: #4CAF50;
-        color: white;
-    }
-    
-    .zone-info-popup .btn-save:hover {
-        background: #45a049;
-    }
-    
-    .zone-info-popup .btn-close {
-        background: #555;
-        color: white;
-    }
-    
-    .zone-info-popup .btn-close:hover {
-        background: #666;
-    }
-    
     /* Status GPS */
     .gps-status {
         position: fixed;
@@ -805,22 +569,6 @@
         }
     }
     
-    /* Saved Location Marker */
-    .saved-location-marker {
-        background: #4CAF50;
-        border: 2px solid #ffd700;
-        border-radius: 50%;
-        width: 12px;
-        height: 12px;
-        animation: savedPulse 2s infinite;
-    }
-    
-    @keyframes savedPulse {
-        0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-    }
-    
     /* ========== MOBILE STYLES ========== */
     @media (max-width: 768px) {
         body {
@@ -882,8 +630,7 @@
         }
         
         /* GPS Control di mobile */
-        .gps-control a,
-        .save-location-control a {
+        .gps-control a {
             width: 40px;
             height: 40px;
             line-height: 40px;
@@ -984,13 +731,6 @@
             padding: 8px 10px;
             min-width: 180px;
         }
-        
-        .saved-locations-panel {
-            width: 90%;
-            left: 5%;
-            bottom: 10px;
-            max-height: 350px;
-        }
     }
     </style>
 </head>
@@ -1027,27 +767,6 @@
         <div style="display: flex; justify-content: space-between;">
             <span>Akurasi: <span id="gps-accuracy" class="accuracy">0</span> m</span>
             <span>Kecepatan: <span id="gps-speed">0</span> km/j</span>
-        </div>
-    </div>
-    
-    <!-- Saved Locations Panel -->
-    <div id="saved-locations-panel" class="saved-locations-panel">
-        <div class="panel-header">
-            <h3><i class="fas fa-bookmark"></i> Lokasi Tersimpan</h3>
-            <button id="close-panel-btn"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="saved-locations-list" class="saved-locations-list">
-            <!-- Saved locations will be listed here -->
-        </div>
-    </div>
-    
-    <!-- Zone Info Popup (hidden by default) -->
-    <div id="zone-info-popup" class="zone-info-popup" style="display: none;">
-        <h4><i class="fas fa-map-pin"></i> Informasi Zona</h4>
-        <div id="zone-info-content"></div>
-        <div class="button-group">
-            <button id="save-zone-btn" class="btn-save"><i class="fas fa-save"></i> Simpan Lokasi</button>
-            <button id="close-zone-popup" class="btn-close"><i class="fas fa-times"></i> Tutup</button>
         </div>
     </div>
     
@@ -3467,206 +3186,6 @@
         // Tampilkan semua marker
         markers.forEach(m => m.addTo(map));
 
-        // ========== FITUR SAVE LOKASI UNTUK CEK ZONA ==========
-        // Array untuk menyimpan lokasi yang disimpan
-        let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
-        
-        // Object untuk menyimpan marker lokasi tersimpan
-        const savedMarkers = {};
-        
-        // Fungsi untuk mendapatkan zona dari koordinat berdasarkan layer Pola Ruang
-        function getZoneFromPoint(lat, lng) {
-            if (!polaRuangLayer) return null;
-            
-            const point = turf.point([lng, lat]);
-            let zone = null;
-            
-            // Iterasi setiap feature di polaRuangLayer
-            polaRuangLayer.eachLayer(function(layer) {
-                if (layer.feature && layer.feature.geometry) {
-                    try {
-                        // Konversi feature ke polygon turf
-                        const polygon = turf.polygon(layer.feature.geometry.coordinates);
-                        
-                        // Cek apakah point berada di dalam polygon
-                        if (turf.booleanPointInPolygon(point, polygon)) {
-                            zone = {
-                                name: layer.feature.properties['NAMOBJ'] || 'Zona Tidak Diketahui',
-                                feature: layer.feature
-                            };
-                        }
-                    } catch (e) {
-                        // Skip jika error
-                    }
-                }
-            });
-            
-            return zone;
-        }
-        
-        // Fungsi untuk menampilkan popup info zona
-        function showZoneInfoPopup(lat, lng, zone) {
-            const popup = document.getElementById('zone-info-popup');
-            const content = document.getElementById('zone-info-content');
-            
-            const zoneName = zone ? zone.name : 'Tidak dalam zona manapun';
-            const zoneColor = zone ? '#4CAF50' : '#ff6b6b';
-            
-            content.innerHTML = `
-                <div class="zone-name" style="color: ${zoneColor}">
-                    <i class="fas fa-${zone ? 'check-circle' : 'exclamation-triangle'}"></i> 
-                    ${zoneName}
-                </div>
-                <div class="zone-detail">
-                    <p><i class="fas fa-map-marker-alt"></i> <strong>Lat:</strong> ${lat.toFixed(6)}°</p>
-                    <p><i class="fas fa-map-marker-alt"></i> <strong>Lng:</strong> ${lng.toFixed(6)}°</p>
-                    <p><i class="fas fa-clock"></i> <strong>Waktu:</strong> ${new Date().toLocaleString()}</p>
-                    <p><i class="fas fa-info-circle"></i> <strong>Status:</strong> ${zone ? 'Masuk dalam zona' : 'Tidak masuk zona'}</p>
-                </div>
-            `;
-            
-            // Simpan data lokasi untuk keperluan save
-            popup.dataset.lat = lat;
-            popup.dataset.lng = lng;
-            popup.dataset.zoneName = zone ? zone.name : 'Tidak Ada Zona';
-            popup.dataset.zoneColor = zoneColor;
-            
-            popup.style.display = 'block';
-        }
-        
-        // Fungsi untuk menyimpan lokasi
-        function saveCurrentLocation() {
-            const popup = document.getElementById('zone-info-popup');
-            const lat = parseFloat(popup.dataset.lat);
-            const lng = parseFloat(popup.dataset.lng);
-            const zoneName = popup.dataset.zoneName;
-            
-            if (!lat || !lng) return;
-            
-            // Buat objek lokasi baru
-            const newLocation = {
-                id: Date.now(),
-                name: `Lokasi ${savedLocations.length + 1}`,
-                lat: lat,
-                lng: lng,
-                zone: zoneName,
-                timestamp: new Date().toISOString(),
-                notes: ''
-            };
-            
-            // Tambahkan ke array
-            savedLocations.push(newLocation);
-            
-            // Simpan ke localStorage
-            localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-            
-            // Tambahkan marker ke peta
-            addSavedLocationMarker(newLocation);
-            
-            // Update daftar lokasi tersimpan
-            renderSavedLocationsList();
-            
-            // Tampilkan notifikasi
-            showNotification('Lokasi berhasil disimpan!', 'success');
-        }
-        
-        // Fungsi untuk menambah marker lokasi tersimpan
-        function addSavedLocationMarker(location) {
-            const icon = L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div class="saved-location-marker" style="background:#4CAF50; width:14px; height:14px; border-radius:50%; border:2px solid #ffd700;"></div>`,
-                iconSize: [18, 18],
-                iconAnchor: [9, 9]
-            });
-            
-            const marker = L.marker([location.lat, location.lng], { icon })
-                .bindPopup(`
-                    <div class="info-window">
-                        <h3><i class="fas fa-bookmark"></i> ${location.name}</h3>
-                        <p><strong>Zona:</strong> ${location.zone}</p>
-                        <p><strong>Koordinat:</strong> ${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}</p>
-                        <p><strong>Disimpan:</strong> ${new Date(location.timestamp).toLocaleString()}</p>
-                        <button onclick="deleteSavedLocation(${location.id})" style="background:#ff6b6b; color:white; border:none; padding:5px 10px; border-radius:5px; margin-top:5px; cursor:pointer;">
-                            <i class="fas fa-trash"></i> Hapus
-                        </button>
-                    </div>
-                `);
-            
-            marker.addTo(map);
-            savedMarkers[location.id] = marker;
-        }
-        
-        // Fungsi untuk menghapus lokasi tersimpan
-        function deleteSavedLocation(id) {
-            // Hapus dari array
-            savedLocations = savedLocations.filter(loc => loc.id !== id);
-            
-            // Simpan ke localStorage
-            localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-            
-            // Hapus marker dari peta
-            if (savedMarkers[id]) {
-                map.removeLayer(savedMarkers[id]);
-                delete savedMarkers[id];
-            }
-            
-            // Update daftar
-            renderSavedLocationsList();
-            
-            showNotification('Lokasi dihapus', 'info');
-        }
-        
-        // Fungsi untuk render daftar lokasi tersimpan
-        function renderSavedLocationsList() {
-            const list = document.getElementById('saved-locations-list');
-            
-            if (savedLocations.length === 0) {
-                list.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Belum ada lokasi tersimpan</div>';
-                return;
-            }
-            
-            list.innerHTML = savedLocations.map(loc => `
-                <div class="saved-location-item" onclick="centerToSavedLocation(${loc.lat}, ${loc.lng})">
-                    <div class="delete-location" onclick="event.stopPropagation(); deleteSavedLocation(${loc.id})">
-                        <i class="fas fa-times"></i>
-                    </div>
-                    <div class="location-name"><i class="fas fa-map-pin"></i> ${loc.name}</div>
-                    <div class="location-zone"><i class="fas fa-tag"></i> ${loc.zone}</div>
-                    <div class="location-coords">${loc.lat.toFixed(6)}, ${loc.lng.toFixed(6)}</div>
-                    <div class="location-time">${new Date(loc.timestamp).toLocaleString()}</div>
-                </div>
-            `).join('');
-        }
-        
-        // Fungsi untuk center ke lokasi tersimpan
-        function centerToSavedLocation(lat, lng) {
-            map.setView([lat, lng], 18);
-        }
-        
-        // Fungsi untuk menampilkan notifikasi
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : '#ff6b6b'};
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                z-index: 10000;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                animation: slideIn 0.3s ease;
-            `;
-            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-        
         // ========== FITUR GPS OTOMATIS & LIVE TRACKING (DIPERBAIKI AKURASI) ==========
         let userMarker = null;
         let userAccuracyCircle = null;
@@ -3826,9 +3345,6 @@
                         <p><strong>Kecepatan:</strong> ${originalPosition.coords.speed ? (originalPosition.coords.speed * 3.6).toFixed(1) : '0'} km/j</p>
                         <p><strong>Update:</strong> ${new Date().toLocaleTimeString()}</p>
                         <p><strong>Status:</strong> ${originalPosition.coords.accuracy < 10 ? 'Akurasi Tinggi' : (originalPosition.coords.accuracy < 30 ? 'Akurasi Sedang' : 'Akurasi Rendah')}</p>
-                        <button onclick="checkCurrentZone()" style="background:#4CAF50; color:white; border:none; padding:8px 12px; border-radius:5px; margin-top:10px; width:100%; cursor:pointer;">
-                            <i class="fas fa-map-pin"></i> Cek Zona & Simpan
-                        </button>
                     </div>
                 `);
             
@@ -3838,18 +3354,6 @@
             }
             
             lastPosition = position;
-        }
-        
-        // Fungsi untuk mengecek zona dari lokasi GPS saat ini
-        function checkCurrentZone() {
-            if (lastPosition) {
-                const lat = lastPosition.coords.latitude;
-                const lng = lastPosition.coords.longitude;
-                const zone = getZoneFromPoint(lat, lng);
-                showZoneInfoPopup(lat, lng, zone);
-            } else {
-                alert('GPS belum aktif atau lokasi belum ditemukan');
-            }
         }
         
         // Fungsi error GPS
@@ -3978,46 +3482,11 @@
         };
         recenterControl.addTo(map);
         
-        // Tambahkan tombol Save Location
-        const saveLocationControl = L.control({ position: 'topleft' });
-        saveLocationControl.onAdd = function(map) {
-            const div = L.DomUtil.create('div', 'save-location-control');
-            div.id = 'save-location-control';
-            div.innerHTML = '<a href="#" id="save-location-button" title="Cek Zona & Simpan Lokasi">📌</a>';
-            
-            // Prevent map click when clicking the control
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.disableScrollPropagation(div);
-            
-            return div;
-        };
-        saveLocationControl.addTo(map);
-        
-        // Tambahkan tombol untuk melihat lokasi tersimpan
-        const viewSavedControl = L.control({ position: 'topleft' });
-        viewSavedControl.onAdd = function(map) {
-            const div = L.DomUtil.create('div', 'save-location-control');
-            div.id = 'view-saved-control';
-            div.innerHTML = '<a href="#" id="view-saved-button" title="Lihat Lokasi Tersimpan">📋</a>';
-            
-            // Prevent map click when clicking the control
-            L.DomEvent.disableClickPropagation(div);
-            L.DomEvent.disableScrollPropagation(div);
-            
-            return div;
-        };
-        viewSavedControl.addTo(map);
-        
-        // Event listeners untuk tombol setelah DOM siap
+        // Event listeners untuk tombol GPS setelah DOM siap
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 const gpsBtn = document.getElementById('gps-button');
                 const recenterBtn = document.getElementById('recenter-button');
-                const saveLocationBtn = document.getElementById('save-location-button');
-                const viewSavedBtn = document.getElementById('view-saved-button');
-                const closePanelBtn = document.getElementById('close-panel-btn');
-                const saveZoneBtn = document.getElementById('save-zone-btn');
-                const closeZonePopup = document.getElementById('close-zone-popup');
                 
                 if (gpsBtn) {
                     gpsBtn.addEventListener('click', function(e) {
@@ -4034,47 +3503,6 @@
                         centerToUser();
                     });
                 }
-                
-                if (saveLocationBtn) {
-                    saveLocationBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        checkCurrentZone();
-                    });
-                }
-                
-                if (viewSavedBtn) {
-                    viewSavedBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const panel = document.getElementById('saved-locations-panel');
-                        panel.classList.toggle('active');
-                    });
-                }
-                
-                if (closePanelBtn) {
-                    closePanelBtn.addEventListener('click', function() {
-                        document.getElementById('saved-locations-panel').classList.remove('active');
-                    });
-                }
-                
-                if (saveZoneBtn) {
-                    saveZoneBtn.addEventListener('click', function() {
-                        saveCurrentLocation();
-                        document.getElementById('zone-info-popup').style.display = 'none';
-                    });
-                }
-                
-                if (closeZonePopup) {
-                    closeZonePopup.addEventListener('click', function() {
-                        document.getElementById('zone-info-popup').style.display = 'none';
-                    });
-                }
-                
-                // Load saved locations
-                savedLocations.forEach(loc => addSavedLocationMarker(loc));
-                renderSavedLocationsList();
-                
             }, 500);
         });
 
@@ -4089,7 +3517,6 @@
                 <div><span style="background:red"></span> Ditolak</div>
                 <hr>
                 <div><span style="background:#4285F4; border-radius:50%;"></span> Lokasi Anda</div>
-                <div><span style="background:#4CAF50; border-radius:50%;"></span> Lokasi Tersimpan</div>
                 <hr>
                 <div><span style="background:rgba(35,169,207,1); width:14px; height:2px; border-radius:0;"></span> Batas Adm</div>
                 <div><span style="background:rgba(210,117,233,1); border-radius:0;"></span> Pola Ruang</div>
@@ -4224,14 +3651,6 @@
             document.getElementById('type-filter').addEventListener('change', filterData);
             document.getElementById('year-filter').addEventListener('change', filterData);
         });
-
-        // Tambahkan fungsi ke window agar bisa diakses dari HTML
-        window.checkCurrentZone = checkCurrentZone;
-        window.saveCurrentLocation = saveCurrentLocation;
-        window.deleteSavedLocation = deleteSavedLocation;
-        window.centerToSavedLocation = centerToSavedLocation;
     </script>
-    <!-- Turf.js untuk analisis spasial -->
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 </body>
 </html>
