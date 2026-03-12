@@ -3761,10 +3761,452 @@ const buildingData = [
             });
         }
         
-        // Layer Pola Ruang
-        let polaRuangLayer = null;
-        if (typeof json_POLARUANG_0 !== "undefined") {
-            function style_POLARUANG_0(feature) {
+        // Layer Pola Ruang dengan OPACITY 40% dan POPUP NAMOBJ SAJA (WARNA SESUAI AWAL)
+let polaRuangLayer = null;
+if (typeof json_POLARUANG_0 !== "undefined") {
+    function style_POLARUANG_0(feature) {
+        switch(String(feature.properties['NAMOBJ'])) {
+            case 'Badan Air':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4, // 40%
+                    fillColor: 'rgba(130,239,217,1.0)',
+                    interactive: true,
+                }
+            case 'Badan Jalan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(238,126,231,1.0)',
+                    interactive: true,
+                }
+            case 'Ekosistem Mangrove':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(106,23,230,1.0)',
+                    interactive: true,
+                }
+            case 'Hutan Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(200,150,116,1.0)',
+                    interactive: true,
+                }
+            case 'Instalasi Pengolahan Air Limbah (IPAL)':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(198,230,134,1.0)',
+                    interactive: true,
+                }
+            case 'Pemakaman':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(231,64,64,1.0)',
+                    interactive: true,
+                }
+            case 'Pembangkit Listrik':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(226,196,136,1.0)',
+                    interactive: true,
+                }
+            case 'Perdagangan dan Jasa Skala BWP':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(89,89,222,1.0)',
+                    interactive: true,
+                }
+            case 'Perdagangan dan Jasa Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(79,31,211,1.0)',
+                    interactive: true,
+                }
+            case 'Perdagangan dan Jasa Skala Sub BWP':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(213,130,219,1.0)',
+                    interactive: true,
+                }
+            case 'Perikanan Budidaya':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(216,24,152,1.0)',
+                    interactive: true,
+                }
+            case 'Perkantoran':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(225,101,117,1.0)',
+                    interactive: true,
+                }
+            case 'Perkantoran Pemerintah':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(40,83,203,1.0)',
+                    interactive: true,
+                }
+            case 'Pertahanan dan Keamanan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(182,93,227,1.0)',
+                    interactive: true,
+                }
+            case 'Pertanian Holtikultura':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(39,198,206,1.0)',
+                    interactive: true,
+                }
+            case 'Perumahan dan Perdagangan/Jasa':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(63,198,228,1.0)',
+                    interactive: true,
+                }
+            case 'Perumahan dan Perkantoran':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(155,99,204,1.0)',
+                    interactive: true,
+                }
+            case 'Prasarana Penampungan Akhir':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(213,81,61,1.0)',
+                    interactive: true,
+                }
+            case 'Resapan Air':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(239,84,146,1.0)',
+                    interactive: true,
+                }
+            case 'Rumah Kepadatan Rendah':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(215,126,24,1.0)',
+                    interactive: true,
+                }
+            case 'Rumah Kepadatan Sedang':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(38,112,222,1.0)',
+                    interactive: true,
+                }
+            case 'Rumah Kepadatan Tinggi':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(37,226,37,1.0)',
+                    interactive: true,
+                }
+            case 'Sekitar Danau':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(134,118,236,1.0)',
+                    interactive: true,
+                }
+            case 'Sempadan Pantai':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(41,236,93,1.0)',
+                    interactive: true,
+                }
+            case 'Sempadan Sungai':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(103,208,33,1.0)',
+                    interactive: true,
+                }
+            case 'Sentra Industri Kecil dan Menengah':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(136,210,110,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Kesehatan Skala Kecamatan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(232,15,189,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Kesehatan Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(55,74,200,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Olahraga Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(89,200,133,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Pendidikan Skala Kecamatan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(83,239,226,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Pendidikan Skala Kelurahan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(220,131,99,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Pendidikan Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(48,229,21,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Peribadatan Skala Kelurahan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(195,240,17,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Peribadatan Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(31,162,228,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Sosial budaya Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(226,219,125,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Transportasi Skala Kecamatan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(217,223,129,1.0)',
+                    interactive: true,
+                }
+            case 'SPU Transportasi Skala Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(233,128,184,1.0)',
+                    interactive: true,
+                }
+            case 'Taman Kecamatan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(227,55,101,1.0)',
+                    interactive: true,
+                }
+            case 'Taman Kelurahan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(57,203,135,1.0)',
+                    interactive: true,
+                }
+            case 'Taman Kota':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(25,218,51,1.0)',
+                    interactive: true,
+                }
+            case 'Taman RW':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(211,191,109,1.0)',
+                    interactive: true,
+                }
+            case 'Transportasi':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(14,211,145,1.0)',
+                    interactive: true,
+                }
+            case 'Wisata Buatan':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(73,144,207,1.0)',
+                    interactive: true,
+                }
+            case 'Wisata Budaya':
+                return {
+                    opacity: 1,
+                    color: 'rgba(35,35,35,1.0)',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 0.4,
+                    fillColor: 'rgba(174,228,112,1.0)',
+                    interactive: true,
+                }
+            default:
                 return {
                     opacity: 1,
                     color: 'rgba(35,35,35,1.0)',
@@ -3773,17 +4215,19 @@ const buildingData = [
                     fillOpacity: 0.4,
                     fillColor: 'rgba(210,117,233,1.0)',
                     interactive: true,
-                };
-            }
-            
-            polaRuangLayer = L.geoJSON(json_POLARUANG_0, {
-                style: style_POLARUANG_0,
-                onEachFeature: (feature, layer) => {
-                    const namobj = feature.properties['NAMOBJ'] || 'Pola Ruang';
-                    layer.bindPopup(`<div class="info-window"><h3>${namobj}</h3></div>`);
                 }
-            });
         }
+    }
+
+    // Popup hanya menampilkan NAMOBJ
+    polaRuangLayer = L.geoJSON(json_POLARUANG_0, {
+        style: style_POLARUANG_0,
+        onEachFeature: (feature, layer) => {
+            const namobj = feature.properties['NAMOBJ'] || 'Pola Ruang';
+            layer.bindPopup(`<div class="info-window"><h3>${namobj}</h3></div>`);
+        }
+    });
+}
         
         // Marker bangunan
         const markers = [];
