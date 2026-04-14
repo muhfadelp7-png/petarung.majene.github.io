@@ -1479,6 +1479,315 @@
             max-width: 95%;
         }
     }
+
+    /* ===== TOMBOL TAMBAH DATA ADMIN ===== */
+    .btn-add-data {
+        background: linear-gradient(135deg, #a9a60a, #5c500e);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(169,166,10,0.3);
+    }
+    .btn-add-data:hover {
+        background: linear-gradient(135deg, #bdb90c, #7a6a1a);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(169,166,10,0.5);
+    }
+
+    /* ===== MODAL INPUT DATA ADMIN ===== */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.75);
+        z-index: 9998;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .admin-modal {
+        background: #1e1e1e;
+        border-radius: 14px;
+        border: 1px solid #444;
+        width: 100%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+        animation: modalSlideIn 0.25s ease;
+    }
+    @keyframes modalSlideIn {
+        from { opacity:0; transform: translateY(-20px) scale(0.97); }
+        to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+        background: linear-gradient(90deg, #a9a60a, #2a2a2a);
+        padding: 14px 18px;
+        border-radius: 14px 14px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .modal-header h3 {
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+        line-height: 1;
+    }
+    .modal-close:hover { opacity: 1; }
+
+    .modal-body { padding: 18px; }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .form-grid .full-width { grid-column: 1 / -1; }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .form-group label {
+        font-size: 0.78rem;
+        color: #bdc70a;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 7px;
+        color: #e0e0e0;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        font-family: 'Poppins', sans-serif;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #bdc70a;
+        box-shadow: 0 0 0 2px rgba(189,199,10,0.2);
+    }
+    .form-group select {
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 0.6rem top 50%;
+        background-size: 0.6rem auto;
+    }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+
+    .form-section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 6px 0 2px;
+        grid-column: 1 / -1;
+        border-bottom: 1px solid #333;
+        padding-bottom: 4px;
+    }
+
+    .coord-helper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        grid-column: 1 / -1;
+    }
+    .coord-helper button {
+        white-space: nowrap;
+        background: #2a4a2a;
+        border: 1px solid #4CAF50;
+        color: #4CAF50;
+        border-radius: 6px;
+        padding: 7px 12px;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .coord-helper button:hover { background: #3a5a3a; }
+
+    .modal-footer {
+        padding: 14px 18px;
+        border-top: 1px solid #333;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .btn-modal-cancel {
+        background: #2a2a2a;
+        border: 1px solid #555;
+        color: #ccc;
+        border-radius: 8px;
+        padding: 9px 20px;
+        font-size: 0.85rem;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-modal-cancel:hover { background: #3a3a3a; color: #fff; }
+    .btn-modal-submit {
+        background: linear-gradient(135deg, #a9a60a, #5c500e);
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        padding: 9px 22px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-modal-submit:hover { background: linear-gradient(135deg, #bdb90c, #7a6a1a); }
+
+    .form-required { color: #ff6b6b; margin-left: 2px; }
+
+    @media (max-width: 600px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .form-grid .full-width { grid-column: 1; }
+        .coord-helper { flex-wrap: wrap; }
+    }
+
+    /* ===== MONTH STATS BOX ===== */
+    .month-stats-box {
+        background: linear-gradient(135deg, #1e2a0a, #2a2a1e);
+        border: 1px solid #5c500e;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 0.8rem;
+        display: none;
+    }
+    .month-stats-box.visible { display: block; }
+    .month-stats-title {
+        font-size: 0.7rem;
+        color: #bdc70a;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .month-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    .month-stat-item {
+        background: rgba(255,255,255,0.05);
+        border-radius: 6px;
+        padding: 6px 8px;
+        text-align: center;
+    }
+    .month-stat-num {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #bdc70a;
+        line-height: 1.1;
+    }
+    .month-stat-label {
+        font-size: 0.65rem;
+        color: #888;
+        margin-top: 2px;
+    }
+    .month-stat-item.disetujui .month-stat-num { color: #4CAF50; }
+    .month-stat-item.proses .month-stat-num { color: #ff9800; }
+    .month-stat-item.ditolak .month-stat-num { color: #ff6b6b; }
+
+    /* ===== EDIT BUTTON IN DATA-ITEM ===== */
+    .data-item {
+        position: relative;
+    }
+    .data-item-actions {
+        display: flex;
+        gap: 5px;
+        margin-top: 6px;
+    }
+    .btn-edit-item {
+        background: rgba(169,166,10,0.15);
+        border: 1px solid #5c500e;
+        color: #bdc70a;
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .btn-edit-item:hover { background: rgba(169,166,10,0.3); border-color: #bdc70a; }
+    .btn-delete-item {
+        background: rgba(255,107,107,0.1);
+        border: 1px solid #7a2222;
+        color: #ff6b6b;
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .btn-delete-item:hover { background: rgba(255,107,107,0.25); border-color: #ff6b6b; }
+    .data-item-badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-weight: 600;
+        vertical-align: middle;
+        margin-left: 4px;
+    }
+    .badge-new { background: #ffd700; color: #000; }
+    .badge-disetujui { background: rgba(76,175,80,0.2); color: #4CAF50; border: 1px solid #4CAF50; }
+    .badge-proses { background: rgba(255,152,0,0.2); color: #ff9800; border: 1px solid #ff9800; }
+    .badge-ditolak { background: rgba(255,107,107,0.2); color: #ff6b6b; border: 1px solid #ff6b6b; }
     </style>
 </head>
 <body>
@@ -1502,6 +1811,9 @@
             </div>
         </div>
         <div class="logo-container">
+            <button class="btn-add-data" onclick="openAdminModal()" title="Tambah data bangunan baru">
+                <i class="fas fa-plus"></i> <span id="btn-add-label">Tambah Data</span>
+            </button>
             <img src="gambar/gambar/gambar_1.png" alt="Logo Majene" class="logo">
             <img src="gambar/gambar/gambar_2.png" alt="Logo PUPR" class="logo">
             <img src="gambar/gambar/gambar_3.png" alt="Logo S" class="logo">
@@ -1584,6 +1896,111 @@
         </div>
     </div>
     
+    <!-- ===== MODAL INPUT DATA BANGUNAN ADMIN ===== -->
+    <div id="admin-modal-overlay" class="modal-overlay">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3 id="admin-modal-title"><i class="fas fa-building"></i> Tambah Data Bangunan Baru</h3>
+                <button class="modal-close" onclick="closeAdminModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="form-section-title"><i class="fas fa-user"></i> Informasi Pemilik</div>
+
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-user"></i> Nama Pemilik <span class="form-required">*</span></label>
+                        <input type="text" id="admin-name" placeholder="Contoh: H. AHMAD, S.Pd" autocomplete="off">
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-map-marker-alt"></i> Alamat Lengkap <span class="form-required">*</span></label>
+                        <textarea id="admin-address" rows="2" placeholder="Jl. ..., Kel/Desa ..., Kec. ..., Kab. Majene, Prov. Sulawesi Barat"></textarea>
+                    </div>
+
+                    <div class="form-section-title"><i class="fas fa-map"></i> Lokasi & Koordinat</div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-location-arrow"></i> Latitude <span class="form-required">*</span></label>
+                        <input type="number" id="admin-lat" step="0.000001" placeholder="-3.540000">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-location-arrow"></i> Longitude <span class="form-required">*</span></label>
+                        <input type="number" id="admin-lng" step="0.000001" placeholder="118.985000">
+                    </div>
+                    <div class="coord-helper">
+                        <button onclick="useCurrentGPS()"><i class="fas fa-crosshairs"></i> Gunakan GPS Saat Ini</button>
+                        <button onclick="pickFromMap()"><i class="fas fa-map-pin"></i> Pilih dari Peta</button>
+                        <span id="coord-hint" style="font-size:0.75rem;color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-city"></i> Kelurahan <span class="form-required">*</span></label>
+                        <input type="text" id="admin-kelurahan" placeholder="Lembang" list="kelurahan-list">
+                        <datalist id="kelurahan-list"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map"></i> Kecamatan <span class="form-required">*</span></label>
+                        <input type="text" id="admin-kecamatan" placeholder="Banggae Timur" list="kecamatan-list">
+                        <datalist id="kecamatan-list"></datalist>
+                    </div>
+
+                    <div class="form-section-title"><i class="fas fa-home"></i> Data Bangunan</div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Jenis Kegiatan <span class="form-required">*</span></label>
+                        <select id="admin-type">
+                            <option value="">-- Pilih Jenis --</option>
+                            <option>Rumah Tinggal</option>
+                            <option>Rumah Kos</option>
+                            <option>Ruko</option>
+                            <option>Perumahan</option>
+                            <option>Hunian/Perdagangan & Jasa</option>
+                            <option>Perumahan dan Perdagangan Jasa</option>
+                            <option>Supermaket, Café & Penginapan</option>
+                            <option>Rumah Makan</option>
+                            <option>Tower Telekomunikasi</option>
+                            <option>Industri Minuman</option>
+                            <option>Karantina Hewan</option>
+                            <option>Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Status PBG <span class="form-required">*</span></label>
+                        <select id="admin-status">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Disetujui">Disetujui</option>
+                            <option value="Proses">Dalam Proses</option>
+                            <option value="Ditolak">Ditolak</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-ruler-combined"></i> Luas Bangunan</label>
+                        <input type="text" id="admin-area" placeholder="Contoh: 120 m²">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-layer-group"></i> Jumlah Lantai</label>
+                        <input type="number" id="admin-floors" min="1" max="99" placeholder="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Tanggal Persetujuan <span class="form-required">*</span></label>
+                        <input type="date" id="admin-date">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Nomor Izin / PBG</label>
+                        <input type="text" id="admin-permit" placeholder="Nomor izin atau -">
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="closeAdminModal()"><i class="fas fa-times"></i> Batal</button>
+                <button class="btn-modal-submit" id="admin-submit-btn" onclick="submitAdminData()"><i class="fas fa-save"></i> Simpan Data</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Container -->
     <div class="container">
         <!-- Sidebar (akan muncul di bawah pada mobile) -->
@@ -1611,6 +2028,40 @@
                 <select id="year-filter">
                     <option value="">Semua Tahun</option>
                 </select>
+                <select id="month-filter">
+                    <option value="">Semua Bulan</option>
+                    <option value="01">Januari</option>
+                    <option value="02">Februari</option>
+                    <option value="03">Maret</option>
+                    <option value="04">April</option>
+                    <option value="05">Mei</option>
+                    <option value="06">Juni</option>
+                    <option value="07">Juli</option>
+                    <option value="08">Agustus</option>
+                    <option value="09">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+            </div>
+
+            <!-- Box Statistik Bulan -->
+            <div class="month-stats-box" id="month-stats-box">
+                <div class="month-stats-title"><i class="fas fa-chart-bar"></i> <span id="month-stats-label">Statistik Bulan</span></div>
+                <div class="month-stats-grid">
+                    <div class="month-stat-item">
+                        <div class="month-stat-num" id="stat-total">0</div>
+                        <div class="month-stat-label">Total</div>
+                    </div>
+                    <div class="month-stat-item disetujui">
+                        <div class="month-stat-num" id="stat-disetujui">0</div>
+                        <div class="month-stat-label">Disetujui</div>
+                    </div>
+                    <div class="month-stat-item proses">
+                        <div class="month-stat-num" id="stat-proses">0</div>
+                        <div class="month-stat-label">Proses</div>
+                    </div>
+                </div>
             </div>
             
             <div class="data-list" id="data-list"></div>
@@ -4936,6 +5387,7 @@
             document.getElementById('status-filter').addEventListener('change', filterData);
             document.getElementById('type-filter').addEventListener('change', filterData);
             document.getElementById('year-filter').addEventListener('change', filterData);
+            document.getElementById('month-filter').addEventListener('change', filterData);
         });
         
         // Export functions ke window
@@ -4946,6 +5398,328 @@
         window.editSavedLocation = editSavedLocation;
         window.toggleSavedPanel = toggleSavedPanel;
         window.toggleLegend = toggleLegend;
+
+        // ==================== ADMIN INPUT DATA BANGUNAN ====================
+
+        let isPickingFromMap = false;
+        let adminEditId = null; // null = tambah baru, angka = edit existing
+
+        const BULAN = ['','Januari','Februari','Maret','April','Mei','Juni',
+                       'Juli','Agustus','September','Oktober','November','Desember'];
+
+        // ---- BUKA MODAL TAMBAH BARU ----
+        window.openAdminModal = function() {
+            adminEditId = null;
+            document.getElementById('admin-modal-title').innerHTML = '<i class="fas fa-building"></i> Tambah Data Bangunan Baru';
+            document.getElementById('admin-submit-btn').innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+            const overlay = document.getElementById('admin-modal-overlay');
+            overlay.classList.add('active');
+            document.getElementById('admin-date').valueAsDate = new Date();
+            populateAdminDatalist();
+            resetAdminForm();
+        };
+
+        // ---- BUKA MODAL EDIT ----
+        window.openEditBuildingModal = function(id) {
+            const b = buildingData.find(x => x.id === id);
+            if (!b) return;
+            adminEditId = id;
+            document.getElementById('admin-modal-title').innerHTML = '<i class="fas fa-edit"></i> Edit Data Bangunan';
+            document.getElementById('admin-submit-btn').innerHTML = '<i class="fas fa-save"></i> Update Data';
+            const overlay = document.getElementById('admin-modal-overlay');
+            overlay.classList.add('active');
+            populateAdminDatalist();
+            // Isi form dengan data yang ada
+            document.getElementById('admin-name').value        = b.name || '';
+            document.getElementById('admin-address').value     = b.address || '';
+            document.getElementById('admin-lat').value         = b.lat || '';
+            document.getElementById('admin-lng').value         = b.lng || '';
+            document.getElementById('admin-kelurahan').value   = b.kelurahan || '';
+            document.getElementById('admin-kecamatan').value   = b.kecamatan || '';
+            document.getElementById('admin-type').value        = b.type || '';
+            document.getElementById('admin-status').value      = b.status || '';
+            document.getElementById('admin-area').value        = b.area || '';
+            document.getElementById('admin-floors').value      = b.floors || '';
+            document.getElementById('admin-date').value        = b.approvalDate || '';
+            document.getElementById('admin-permit').value      = b.permitNumber || '';
+            document.getElementById('coord-hint').textContent  = '';
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-modal-overlay').classList.remove('active');
+            resetAdminForm();
+            adminEditId = null;
+            if (isPickingFromMap) {
+                isPickingFromMap = false;
+                map.off('click', onMapPickClick);
+                document.getElementById('coord-hint').textContent = '';
+            }
+        };
+
+        function resetAdminForm() {
+            ['admin-name','admin-address','admin-lat','admin-lng','admin-kelurahan',
+             'admin-kecamatan','admin-type','admin-status','admin-area','admin-floors',
+             'admin-permit'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            document.getElementById('admin-date').valueAsDate = new Date();
+            document.getElementById('coord-hint').textContent = '';
+        }
+
+        function populateAdminDatalist() {
+            const kelSet = new Set(buildingData.map(b => b.kelurahan));
+            const kecSet = new Set(buildingData.map(b => b.kecamatan));
+            document.getElementById('kelurahan-list').innerHTML = [...kelSet].sort().map(k => `<option value="${k}">`).join('');
+            document.getElementById('kecamatan-list').innerHTML = [...kecSet].sort().map(k => `<option value="${k}">`).join('');
+        }
+
+        window.useCurrentGPS = function() {
+            if (!lastPosition) { showNotification('GPS belum aktif. Aktifkan GPS terlebih dahulu.', 'warning'); return; }
+            document.getElementById('admin-lat').value = lastPosition.coords.latitude.toFixed(6);
+            document.getElementById('admin-lng').value = lastPosition.coords.longitude.toFixed(6);
+            document.getElementById('coord-hint').textContent = `✓ Dari GPS (akurasi ±${Math.round(lastPosition.coords.accuracy)}m)`;
+            document.getElementById('coord-hint').style.color = '#4CAF50';
+        };
+
+        function onMapPickClick(e) {
+            document.getElementById('admin-lat').value = e.latlng.lat.toFixed(6);
+            document.getElementById('admin-lng').value = e.latlng.lng.toFixed(6);
+            document.getElementById('coord-hint').textContent = '✓ Dipilih dari peta';
+            document.getElementById('coord-hint').style.color = '#4CAF50';
+            map.off('click', onMapPickClick);
+            isPickingFromMap = false;
+            document.getElementById('admin-modal-overlay').classList.add('active');
+        }
+
+        window.pickFromMap = function() {
+            document.getElementById('admin-modal-overlay').classList.remove('active');
+            isPickingFromMap = true;
+            showNotification('Klik titik di peta untuk memilih koordinat...', 'info');
+            map.once('click', onMapPickClick);
+        };
+
+        // ---- FUNGSI BANTU BUAT/UPDATE MARKER ----
+        function buildMarkerIcon(status, isNew) {
+            const color = status === 'Disetujui' ? 'green' : (status === 'Proses' ? 'orange' : 'red');
+            const border = isNew ? '3px solid #ffd700' : '2px solid white';
+            const shadow = isNew ? 'box-shadow:0 0 6px rgba(255,215,0,0.8);' : '';
+            const size = isNew ? 14 : 12;
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background:${color};width:${size}px;height:${size}px;border-radius:50%;border:${border};${shadow}"></div>`,
+                iconSize: [size+4, size+4],
+                iconAnchor: [(size+4)/2, (size+4)/2]
+            });
+        }
+
+        window.submitAdminData = function() {
+            const name        = document.getElementById('admin-name').value.trim();
+            const address     = document.getElementById('admin-address').value.trim();
+            const lat         = parseFloat(document.getElementById('admin-lat').value);
+            const lng         = parseFloat(document.getElementById('admin-lng').value);
+            const kelurahan   = document.getElementById('admin-kelurahan').value.trim();
+            const kecamatan   = document.getElementById('admin-kecamatan').value.trim();
+            const type        = document.getElementById('admin-type').value;
+            const status      = document.getElementById('admin-status').value;
+            const approvalDate= document.getElementById('admin-date').value;
+            const area        = document.getElementById('admin-area').value.trim() || '-';
+            const floors      = parseInt(document.getElementById('admin-floors').value) || 1;
+            const permitNumber= document.getElementById('admin-permit').value.trim() || '-';
+
+            if (!name)         { showNotification('Nama pemilik wajib diisi!', 'warning');    document.getElementById('admin-name').focus();      return; }
+            if (!address)      { showNotification('Alamat wajib diisi!', 'warning');           document.getElementById('admin-address').focus();   return; }
+            if (isNaN(lat)||isNaN(lng)) { showNotification('Koordinat (Lat/Lng) wajib diisi!', 'warning'); return; }
+            if (!kelurahan)    { showNotification('Kelurahan wajib diisi!', 'warning');        document.getElementById('admin-kelurahan').focus(); return; }
+            if (!kecamatan)    { showNotification('Kecamatan wajib diisi!', 'warning');        document.getElementById('admin-kecamatan').focus(); return; }
+            if (!type)         { showNotification('Jenis kegiatan wajib dipilih!', 'warning'); return; }
+            if (!status)       { showNotification('Status PBG wajib dipilih!', 'warning');    return; }
+            if (!approvalDate) { showNotification('Tanggal persetujuan wajib diisi!', 'warning'); return; }
+
+            if (adminEditId !== null) {
+                // ---- MODE EDIT ----
+                const idx = buildingData.findIndex(x => x.id === adminEditId);
+                if (idx === -1) return;
+                const b = buildingData[idx];
+                b.name = name; b.address = address; b.lat = lat; b.lng = lng;
+                b.kelurahan = kelurahan; b.kecamatan = kecamatan; b.type = type;
+                b.status = status; b.approvalDate = approvalDate; b.area = area;
+                b.floors = floors; b.permitNumber = permitNumber;
+                b._editedAt = new Date().toISOString();
+
+                // Update marker
+                const existingMarker = markers.find(m => m.buildingData.id === adminEditId);
+                if (existingMarker) {
+                    existingMarker.setLatLng([lat, lng]);
+                    existingMarker.setIcon(buildMarkerIcon(status, b._addedByAdmin));
+                    existingMarker.setPopupContent(`
+                        <div class="info-window">
+                            <h3>${name}${b._addedByAdmin ? ' <span style="font-size:0.7rem;background:#ffd700;color:#000;border-radius:4px;padding:1px 5px;">BARU</span>' : ''}</h3>
+                            <p><strong>Alamat:</strong> ${address}</p>
+                            <p><strong>Jenis:</strong> ${type}</p>
+                            <p><strong>Status:</strong> ${status}</p>
+                            <p><strong>Tanggal:</strong> ${approvalDate}</p>
+                            <p><strong>Luas:</strong> ${area}</p>
+                            <p><strong>Lantai:</strong> ${floors}</p>
+                        </div>`);
+                    existingMarker.buildingData = b;
+                }
+
+                renderDataList(buildingData);
+                populateFilters();
+                updateMonthStats();
+                map.flyTo([lat, lng], 16, { animate: true, duration: 1 });
+                closeAdminModal();
+                showNotification(`✅ Data "${name}" berhasil diupdate!`, 'success');
+
+            } else {
+                // ---- MODE TAMBAH BARU ----
+                const newId = Math.max(...buildingData.map(b => b.id), 0) + 1;
+                const newBuilding = {
+                    id: newId, name, address, lat, lng, type, status,
+                    approvalDate, area, floors, permitNumber, kelurahan, kecamatan,
+                    _addedByAdmin: true, _addedAt: new Date().toISOString()
+                };
+                buildingData.push(newBuilding);
+
+                const newMarker = L.marker([lat, lng], { icon: buildMarkerIcon(status, true) })
+                    .bindPopup(`
+                        <div class="info-window">
+                            <h3>${name} <span style="font-size:0.7rem;background:#ffd700;color:#000;border-radius:4px;padding:1px 5px;">BARU</span></h3>
+                            <p><strong>Alamat:</strong> ${address}</p>
+                            <p><strong>Jenis:</strong> ${type}</p>
+                            <p><strong>Status:</strong> ${status}</p>
+                            <p><strong>Tanggal:</strong> ${approvalDate}</p>
+                            <p><strong>Luas:</strong> ${area}</p>
+                            <p><strong>Lantai:</strong> ${floors}</p>
+                        </div>`);
+                newMarker.buildingData = newBuilding;
+                markers.push(newMarker);
+                newMarker.addTo(map);
+
+                renderDataList(buildingData);
+                populateFilters();
+                updateMonthStats();
+                map.flyTo([lat, lng], 16, { animate: true, duration: 1.2 });
+                closeAdminModal();
+                showNotification(`✅ Data "${name}" berhasil ditambahkan (ID: ${newId})`, 'success');
+            }
+        };
+
+        // ---- DELETE BUILDING FROM SIDEBAR ----
+        window.deleteBuildingData = function(id) {
+            const b = buildingData.find(x => x.id === id);
+            if (!b) return;
+            if (!confirm(`Hapus data "${b.name}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+            const idx = buildingData.findIndex(x => x.id === id);
+            buildingData.splice(idx, 1);
+            const mIdx = markers.findIndex(m => m.buildingData.id === id);
+            if (mIdx !== -1) { map.removeLayer(markers[mIdx]); markers.splice(mIdx, 1); }
+            renderDataList(buildingData);
+            populateFilters();
+            updateMonthStats();
+            showNotification(`🗑️ Data "${b.name}" dihapus`, 'info');
+        };
+
+        // ---- RENDER DATA LIST (versi baru dengan tombol edit & badge status) ----
+        // Override fungsi renderDataList yang sudah ada
+        function renderDataList(data) {
+            const list = document.getElementById('data-list');
+            list.innerHTML = '';
+            if (data.length === 0) {
+                list.innerHTML = '<div style="text-align:center;color:#666;padding:20px;font-size:0.85rem;"><i class="fas fa-search"></i><br>Tidak ada data ditemukan</div>';
+                return;
+            }
+            data.forEach(b => {
+                const item = document.createElement('div');
+                item.className = 'data-item';
+                const statusClass = b.status === 'Disetujui' ? 'disetujui' : (b.status === 'Proses' ? 'proses' : 'ditolak');
+                const isNew = b._addedByAdmin;
+                item.innerHTML = `
+                    <h3>${b.name}${isNew ? '<span class="data-item-badge badge-new">BARU</span>' : ''}<span class="data-item-badge badge-${statusClass}">${b.status}</span></h3>
+                    <p><strong>Jenis:</strong> ${b.type}</p>
+                    <p><strong>Kel:</strong> ${b.kelurahan} | <strong>Kec:</strong> ${b.kecamatan}</p>
+                    <p><strong>Tanggal:</strong> ${b.approvalDate}</p>
+                    <div class="data-item-actions">
+                        <button class="btn-edit-item" onclick="event.stopPropagation(); openEditBuildingModal(${b.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-delete-item" onclick="event.stopPropagation(); deleteBuildingData(${b.id})">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>`;
+                item.onclick = () => {
+                    const m = markers.find(m => m.buildingData.id === b.id);
+                    if (m) { map.setView([b.lat, b.lng], 18); setTimeout(() => m.openPopup(), 300); }
+                };
+                list.appendChild(item);
+            });
+        }
+
+        // ---- FILTER BULAN & STATS BOX ----
+        function updateMonthStats() {
+            const year  = document.getElementById('year-filter').value;
+            const month = document.getElementById('month-filter').value;
+            const box   = document.getElementById('month-stats-box');
+
+            if (!month && !year) { box.classList.remove('visible'); return; }
+
+            const filtered = buildingData.filter(b => {
+                const d = b.approvalDate || '';
+                return (!year || d.startsWith(year)) && (!month || d.substring(5,7) === month);
+            });
+
+            const total     = filtered.length;
+            const disetujui = filtered.filter(b => b.status === 'Disetujui').length;
+            const proses    = filtered.filter(b => b.status === 'Proses').length;
+
+            const monthName = month ? BULAN[parseInt(month)] : 'Semua Bulan';
+            const yearLabel = year || 'Semua Tahun';
+            document.getElementById('month-stats-label').textContent =
+                (month && year) ? `${monthName} ${yearLabel}` : month ? `${monthName} (Semua Tahun)` : `${yearLabel}`;
+            document.getElementById('stat-total').textContent     = total;
+            document.getElementById('stat-disetujui').textContent = disetujui;
+            document.getElementById('stat-proses').textContent    = proses;
+            box.classList.add('visible');
+        }
+
+        // ---- OVERRIDE filterData untuk tambah bulan ----
+        function filterData() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const kel    = document.getElementById('kelurahan-filter').value;
+            const kec    = document.getElementById('kecamatan-filter').value;
+            const status = document.getElementById('status-filter').value;
+            const type   = document.getElementById('type-filter').value;
+            const year   = document.getElementById('year-filter').value;
+            const month  = document.getElementById('month-filter').value;
+
+            const filtered = buildingData.filter(b => {
+                const d = b.approvalDate || '';
+                return (b.name.toLowerCase().includes(search) || b.address.toLowerCase().includes(search)) &&
+                    (!kel || b.kelurahan === kel) && (!kec || b.kecamatan === kec) &&
+                    (!status || b.status === status) && (!type || b.type === type) &&
+                    (!year  || d.startsWith(year)) &&
+                    (!month || d.substring(5,7) === month);
+            });
+
+            renderDataList(filtered);
+            updateMonthStats();
+            markers.forEach(m => {
+                const visible = filtered.some(f => f.id === m.buildingData.id);
+                if (visible) { if (!map.hasLayer(m)) m.addTo(map); }
+                else         { if (map.hasLayer(m))  m.remove();    }
+            });
+        }
+
+        // Tampilkan label tombol di layar besar
+        (function() {
+            function checkWidth() {
+                const label = document.getElementById('btn-add-label');
+                if (label) label.style.display = window.innerWidth > 480 ? 'inline' : 'none';
+            }
+            checkWidth();
+            window.addEventListener('resize', checkWidth);
+        })();
     </script>
 </body>
 </html>
